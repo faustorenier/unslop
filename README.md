@@ -14,7 +14,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 ## Install (once per machine)
 
 ```
-/plugin marketplace add <owner>/claude-skills
+/plugin marketplace add faustorenier/claude-skills
 /plugin install core@fausto-skills
 /plugin install planning@fausto-skills
 ```
@@ -30,18 +30,38 @@ claude plugin update planning@fausto-skills
 
 ## Enable a bundle in one project
 
-Add to `<project>/.claude/settings.json` (commit it, so collaborators get the same setup):
+1. From the project root, once per bundle (`web`, `sanity`, `python`):
 
-```json
-{
-  "extraKnownMarketplaces": {
-    "fausto-skills": { "source": { "source": "github", "repo": "<owner>/claude-skills" } }
-  },
-  "enabledPlugins": {
-    "web@fausto-skills": true
-  }
-}
-```
+   ```
+   claude plugin install web@fausto-skills --scope project
+   ```
+
+   This writes `enabledPlugins` to `<project>/.claude/settings.json`. Use `--scope local` instead
+   to enable it only for yourself (`.claude/settings.local.json`, usually git-ignored).
+
+2. Add the marketplace source to the same file. The install command does not write it, and
+   without it Claude Code on another machine or for a collaborator cannot find `fausto-skills`:
+
+   ```json
+   {
+     "extraKnownMarketplaces": {
+       "fausto-skills": {
+         "source": { "source": "github", "repo": "faustorenier/claude-skills" }
+       }
+     },
+     "enabledPlugins": {
+       "web@fausto-skills": true
+     }
+   }
+   ```
+
+3. Commit `.claude/settings.json`. Whoever opens the project is prompted to add the marketplace
+   and install the bundle; they need read access to this private repo.
+
+4. Check: `claude plugin list` shows the bundle with `Scope: project`, and a new session in the
+   project lists `web:*` skills while sessions elsewhere do not.
+
+Update a project bundle after a push: `claude plugin update web@fausto-skills --scope project`.
 
 ## Workflow
 
