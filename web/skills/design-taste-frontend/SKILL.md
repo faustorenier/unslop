@@ -540,6 +540,8 @@ Use this for: feature lists, testimonial grids, logo walls, anything that just n
 
 ## 6. PERFORMANCE & ACCESSIBILITY GUARDRAILS
 
+Full WCAG 2.2 AA checklist and ARIA patterns for interactive components: the `a11y` skill.
+
 ### 6.A Hardware Acceleration
 * Animate ONLY `transform` and `opacity`. Never animate `top`, `left`, `width`, `height`.
 * Use `will-change: transform` sparingly - only on elements that will actually animate.
@@ -918,9 +920,7 @@ stack: ["react", "next", "tailwind", "motion"]
 ## 13. OUT OF SCOPE
 
 This skill is NOT for:
-* Dashboards / dense product UI / admin panels (use Fluent, Carbon, Atlassian, or Polaris from Section 2.A).
-* Data tables (use TanStack Table or AG Grid).
-* Multi-step forms / wizards (use Form-specific patterns; this skill won't make them better).
+* Dashboards / dense product UI / admin panels, data tables, forms and wizards: use the `product-ui` skill.
 * Code editors (use Monaco / CodeMirror with their official skinning).
 * Native mobile (use Apple HIG / Material directly).
 * Realtime collab UIs (presence, cursors, OT-aware - different problem class).

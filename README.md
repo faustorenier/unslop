@@ -7,7 +7,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 |---|---|---|
 | `core` | git-pr-conventions, commit, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
 | `planning` | grill-me, prd-writer, slice-backlog, github-project-setup, docs-reader, figma-reader | user scope, always |
-| `web` | design-taste-frontend, seo-aeo-best-practices, vercel-react-best-practices | per project |
+| `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
 | `sanity` | content-modeling-best-practices | per project |
 | `python` | python-clean-code | per project |
 
@@ -63,6 +63,17 @@ claude plugin update planning@fausto-skills
 
 Update a project bundle after a push: `claude plugin update web@fausto-skills --scope project`.
 
+## Optional third-party skills per project
+
+Official or widely used skills that complement `web`. Install them only in the projects that
+use the library. `npx skills add` copies files into `<project>/.claude/skills/`: commit them,
+and re-run the command to update.
+
+| Skill | Use with | Install (from the project root) |
+|---|---|---|
+| shadcn/ui (official) | `product-ui` in projects with `components.json` | `npx skills add shadcn/ui` |
+| accessibility (addyosmani, MIT) | audit-oriented alternative or complement to `a11y` | `npx skills add addyosmani/web-quality-skills --skill accessibility --agent claude-code` |
+
 ## Workflow
 
 | Situation | Path |
@@ -71,6 +82,8 @@ Update a project bundle after a push: `claude plugin update web@fausto-skills --
 | Behaviour change with clear scope | plan mode → `tdd-loop` → verification |
 | Bug | `systematic-debugging` → failing test → `tdd-loop` |
 | Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
+| Landing, portfolio, marketing site | `design-taste-frontend` + `seo-aeo-best-practices` + `a11y` |
+| Dashboard, admin, forms, tables | `product-ui` + `a11y`; logic through `tdd-loop` |
 | Done, before merge | `fresh-context-review` (runs in a forked context) or `/code-review` |
 
 ## Ralph loop + TDD recipe
