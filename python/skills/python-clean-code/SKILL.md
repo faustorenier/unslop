@@ -77,6 +77,5 @@ class OrderStatus(StrEnum):
 - Mutable default arguments: `def f(items=[])` is a trap. Use `None` and assign inside.
 - Bare `except:` silences everything including `KeyboardInterrupt`. Always catch specific exceptions.
 - Use `isinstance()` not `type()` — it respects inheritance.
-- Comments explain *why*, not *what*. If you need a comment to explain what, rename the code.
 - `StrEnum` (Python 3.11+) is directly comparable to strings without `.value`.
 - `@dataclass(frozen=True)` makes instances hashable and immutable — use for value objects.

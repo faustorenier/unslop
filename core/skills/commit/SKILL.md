@@ -1,9 +1,12 @@
 ---
 name: commit
-description: Typecheck, summarize changes, and output an English conventional commit message
+description: Typecheck, review the diff, and print a commit message that follows git-pr-conventions
+disable-model-invocation: true
 ---
 
-Run `npx tsc --noEmit`. If it fails, report errors and stop.
-Then run `git diff --stat` and `git diff`.
-Output ONE conventional commit message in English (feat/fix/chore/refactor/style/test), imperative subject <=72 chars, plus a short body listing the touched areas.
-Do NOT run git commit. Just print the message in a code block.
+1. If the project has a `tsconfig.json`, run `npx tsc --noEmit`. If it fails, report the errors and stop.
+2. Run `git status`, `git diff --stat` and `git diff` (staged and unstaged).
+3. Write ONE commit message following the `git-pr-conventions` skill: type, optional scope,
+   subject ≤ 72 chars, body explaining why. If the diff holds unrelated changes, say so and
+   propose one message per logical change instead.
+4. Print it in a code block. Do NOT run `git commit` unless the user asks.

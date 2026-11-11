@@ -1,6 +1,7 @@
 ---
 name: grill-me
-description: Interrogates the user relentlessly about a feature or product idea until there is genuine shared understanding, before any planning or code. Use when the user says "grill me", describes a new feature or product, brings a vague brief, says "I want to build X", or asks to start planning something not yet fully specified.
+description: Interrogates the user relentlessly about a feature or product idea until there is genuine shared understanding, before any planning or code. Run with /grill-me on a vague brief or a new product or feature.
+disable-model-invocation: true
 ---
 
 # Grill me

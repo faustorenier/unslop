@@ -7,6 +7,14 @@ description: Enforces strict red-green-refactor test-driven development — a fa
 
 Red, green, refactor. One cycle per acceptance criterion. No shortcuts.
 
+## Before the first cycle
+
+- Check the branch. On `main`/`master`, create a feature branch first, named per
+  `git-pr-conventions` (`feat/42-login-form`).
+- TDD covers logic: domain rules, data, APIs, state, hooks, utilities. It does not cover
+  visual work — layout, styling, animation, 3D scenes, copy. For those, skip the loop and
+  end by describing exactly what the user should check visually.
+
 ## The cycle
 
 ### 1. RED — write one failing test
@@ -70,7 +78,11 @@ spike and start the real work from RED.
 ## Loop discipline
 
 - Announce each phase: `RED: <criterion>`, `GREEN`, `REFACTOR`.
-- Commit at each green, before refactoring, with the criterion in the message.
+- Commit at each green, before refactoring, on the feature branch only. Message per
+  `git-pr-conventions`, with the criterion in the subject: `feat(cart): apply bulk discount`.
+  Never commit on `main`/`master`.
 - If a cycle takes more than a few minutes of work, the step is too big. Shrink it.
 - When all criteria for the issue are green and the suite passes, stop. Do not add
   speculative features, do not "improve" adjacent code, do not widen the scope.
+- Inside `ralph-loop`, "every criterion green and the full suite passing" is the only
+  condition for emitting the completion promise.

@@ -1,19 +1,25 @@
 ---
 name: fresh-context-review
-description: Reviews a diff, branch, or pull request from a clean context as an adversarial reviewer who did not write the code. Use when the user asks to review changes, review a PR, check a branch before merge, or says the implementation is done and needs checking.
+description: Reviews a diff, branch, or pull request against its acceptance criteria from a forked clean context, as an adversarial reviewer who did not write the code. Use when the user asks to review changes, review a PR, check a branch before merge, or says the implementation is done and needs checking.
+argument-hint: "[PR number | branch | issue number]"
+context: fork
 ---
 
 # Fresh context review
 
-The reviewer must not be the author. If you implemented this code in the current
-session, **say so and ask for a fresh session** — you cannot review your own work
-honestly, because your context is full of the reasoning that produced it.
+You run in a forked context with no memory of how this code was written. Keep it that way:
+review from the diff and the requirements only. Read the code as written, not as intended.
 
-Review from the diff and the requirements. Read the code as written, not as intended.
+Target: $ARGUMENTS (empty → the current branch against its base branch).
+
+This skill checks the change against what was asked. For a broad bug hunt with no
+acceptance criteria, the built-in `/code-review` is the better tool.
 
 ## Setup
 
-1. Get the diff. Get the issue or PRD section it claims to satisfy.
+1. Get the diff (`gh pr diff`, or `git diff <base>...HEAD`). Get the issue (`gh issue view`)
+   or the PRD section in `docs/prd/` it claims to satisfy. No criteria anywhere → say so
+   and review against the PR description, flagging that as a weakness.
 2. Read the acceptance criteria **first**, before the code. This is what you are checking
    against — not your own idea of what the code should look like.
 3. If the diff is too large to hold comfortably in a clean context, stop: say the PR
@@ -66,6 +72,7 @@ Rank by severity. State plainly if nothing is wrong.
 
 ## After review
 
-Findings become new backlog issues, not silent fixes in the same branch — except for
-one-line corrections the author would obviously accept. Manual QA of the end-to-end
-behaviour is still required: the review checks the code, not the system.
+Do not fix anything: you are the reviewer. End with a recommendation per finding — a
+one-line correction the author would obviously accept, or a new backlog issue. The main
+session asks the user before creating any issue. Manual QA of the end-to-end behaviour is
+still required: the review checks the code, not the system.

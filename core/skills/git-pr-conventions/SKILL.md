@@ -6,6 +6,15 @@ allowed-tools: Bash(git *)
 
 # Git & PR conventions
 
+Single source of truth for git in every project. Other skills (`commit`, `tdd-loop`) defer here.
+
+## When to commit
+
+- Run `git commit` only when the user asks, or inside `tdd-loop` on a feature branch.
+- Never commit on `main`/`master`. Create a branch first (see Branch naming).
+- Otherwise, end the task with the commit message as a copy-pasteable block.
+- Keep any `Co-Authored-By` trailer the harness asks for.
+
 ## Commit message format
 ```
 <type>[optional scope]: <description>
@@ -19,8 +28,8 @@ allowed-tools: Bash(git *)
 
 | Type | When | SemVer |
 |---|---|---|
-| `feat` | New feature (your "feature") | MINOR |
-| `fix` | Bug fix (your "fix") | PATCH |
+| `feat` | New feature | MINOR |
+| `fix` | Bug fix | PATCH |
 | `improvement` | Improves existing behaviour, no new feature or bug fix | none |
 | `refactor` | Code restructure, no behaviour change | none |
 | `perf` | Performance improvement | none |
@@ -40,6 +49,12 @@ Breaking change: append `!` after type, or add `BREAKING CHANGE:` footer.
 - Body: explain *why*, not what. Wrap at 72 chars
 - Footer: `Closes #123`, `Refs #456`
 - One logical change per commit
+- Always English, even when the conversation is in another language
+
+## Branch naming
+
+`<type>/<issue>-<short-slug>`, lowercase, hyphens: `feat/42-login-form`, `fix/108-cart-total`.
+No issue → `<type>/<short-slug>`. Type is one of the commit types above.
 
 ## PR title
 
@@ -57,6 +72,8 @@ Closes #<issue>
 ## Gotchas
 
 - `improvement` is valid per spec but has no SemVer impact — use it for UX/DX polish
+- `improvement` is rejected by commitlint `config-conventional`. If the project uses it,
+  use `feat`/`fix` instead, or ask before adding the type to the commitlint config
 - `refactor` ≠ `improvement`: refactor is pure structural, improvement changes observable behaviour
 - Never bundle unrelated changes in one commit
 - `feat!` is a breaking change even without a BREAKING CHANGE footer

@@ -12,7 +12,8 @@ It is not a plan, not a schedule, and not a task list.
 ## Preconditions
 
 Do not write a PRD from a vague brief. If the design has not been interrogated, say so
-and run `grill-me` first. Open questions must be marked as such, never invented.
+and suggest the user runs `/planning:grill-me` first. Open questions must be marked as
+such, never invented.
 
 ## Structure
 

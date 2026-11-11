@@ -7,6 +7,9 @@ allowed-tools: Read, Grep, Glob, Bash(tsc *), Bash(eslint *)
 # TypeScript clean code
 
 ## Baseline config (always strict: true)
+
+For new projects. In an existing project never change `tsconfig.json` unasked: the extra
+flags can surface hundreds of errors. Propose them instead.
 ```json
 {
   "compilerOptions": {

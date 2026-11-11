@@ -40,7 +40,7 @@ Add to `<project>/.claude/settings.json` (commit it, so collaborators get the sa
 
 | Situation | Path |
 |---|---|
-| Vague brief, new product or feature | `/grill-me` → `prd-writer` → `slice-backlog` → `github-project-setup` (asks first) |
+| Vague brief, new product or feature | `/planning:grill-me` → `prd-writer` → `slice-backlog` → `github-project-setup` (asks first) |
 | Behaviour change with clear scope | plan mode → `tdd-loop` → verification |
 | Bug | `systematic-debugging` → failing test → `tdd-loop` |
 | Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
@@ -63,5 +63,7 @@ Always set `--max-iterations`. Review the result outside the loop with `fresh-co
 ## Adding a skill
 
 1. Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter.
-2. Use `disable-model-invocation: true` for skills that should run only via `/name`.
+2. Use `disable-model-invocation: true` for skills that should run only via `/<bundle>:<name>`:
+   the model cannot invoke them and their description costs no context. Today: `core:commit`,
+   `planning:grill-me`, `planning:docs-reader`, `planning:figma-reader`.
 3. Bump `version` in `<bundle>/.claude-plugin/plugin.json`, push, run `/plugin marketplace update`.
