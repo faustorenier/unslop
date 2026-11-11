@@ -5,7 +5,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 
 | Bundle | Skills | Enable |
 |---|---|---|
-| `core` | git-pr-conventions, commit, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
+| `core` | git-pr-conventions, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
 | `planning` | grill-me, prd-writer, slice-backlog, github-project-setup, docs-reader, figma-reader | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
 | `sanity` | content-modeling-best-practices | per project |
@@ -107,7 +107,7 @@ overwrites on update.
 
 1. Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter.
 2. Use `disable-model-invocation: true` for skills that should run only via `/<bundle>:<name>`:
-   the model cannot invoke them and their description costs no context. Today: `core:commit`,
+   the model cannot invoke them and their description costs no context. Today:
    `planning:grill-me`, `planning:docs-reader`, `planning:figma-reader`.
 3. Push, then update as shown in Install. Do not add `version` to
    `plugin.json`: without it the commit SHA is the version, so every push is picked up.

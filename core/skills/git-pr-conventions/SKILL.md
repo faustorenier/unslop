@@ -6,7 +6,7 @@ allowed-tools: Bash(git *)
 
 # Git & PR conventions
 
-Single source of truth for git in every project. Other skills (`commit`, `tdd-loop`) defer here.
+Single source of truth for git in every project. Other skills (`tdd-loop`) defer here.
 
 ## When to commit
 
