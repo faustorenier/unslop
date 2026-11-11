@@ -1,6 +1,5 @@
 {
   "name": "sanity",
-  "version": "1.0.0",
   "description": "Structured content modeling for Sanity and other headless CMSs.",
   "author": {
     "name": "Fausto"

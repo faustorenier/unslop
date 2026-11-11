@@ -19,7 +19,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 /plugin install planning@fausto-skills
 ```
 
-Update after pushing changes: `/plugin marketplace update fausto-skills`.
+GitHub is the only source. After a push, run `/plugin marketplace update fausto-skills`.
 
 ## Enable a bundle in one project
 
@@ -60,10 +60,14 @@ full suite passes." --completion-promise ALL_GREEN --max-iterations 20
 
 Always set `--max-iterations`. Review the result outside the loop with `fresh-context-review`.
 
-## Adding a skill
+## Adding or editing a skill
+
+Work in any clone of this repo, never in `~/.claude/plugins/marketplaces/`, which Claude Code
+overwrites on update.
 
 1. Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter.
 2. Use `disable-model-invocation: true` for skills that should run only via `/<bundle>:<name>`:
    the model cannot invoke them and their description costs no context. Today: `core:commit`,
    `planning:grill-me`, `planning:docs-reader`, `planning:figma-reader`.
-3. Bump `version` in `<bundle>/.claude-plugin/plugin.json`, push, run `/plugin marketplace update`.
+3. Push, then run `/plugin marketplace update fausto-skills`. Do not add `version` to
+   `plugin.json`: without it the commit SHA is the version, so every push is picked up.
