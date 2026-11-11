@@ -1,0 +1,8 @@
+{
+  "name": "core",
+  "version": "1.0.0",
+  "description": "Always-on rules: Conventional Commits, strict TDD, systematic debugging, fresh-context review, clean TypeScript.",
+  "author": {
+    "name": "Fausto"
+  }
+}

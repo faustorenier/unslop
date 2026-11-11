@@ -1,0 +1,8 @@
+{
+  "name": "planning",
+  "version": "1.0.0",
+  "description": "From vague brief to backlog: design interview, PRD with vertical slices, dependency-ordered backlog, GitHub project setup.",
+  "author": {
+    "name": "Fausto"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "fausto-skills",
+  "description": "Personal skill catalog for web agency work: sites, web apps, AI integrations.",
+  "owner": {
+    "name": "Fausto"
+  },
+  "plugins": [
+    {
+      "name": "core",
+      "description": "Always-on rules: Conventional Commits, strict TDD, systematic debugging, fresh-context review, clean TypeScript.",
+      "source": "./core"
+    },
+    {
+      "name": "planning",
+      "description": "From vague brief to backlog: design interview, PRD with vertical slices, dependency-ordered backlog, GitHub project setup.",
+      "source": "./planning"
+    },
+    {
+      "name": "web",
+      "description": "Frontend for sites and web apps: anti-slop design direction, SEO/AEO, React and Next.js performance rules.",
+      "source": "./web"
+    },
+    {
+      "name": "sanity",
+      "description": "Structured content modeling for Sanity and other headless CMSs.",
+      "source": "./sanity"
+    },
+    {
+      "name": "python",
+      "description": "Clean, typed, idiomatic Python.",
+      "source": "./python"
+    }
+  ]
+}
