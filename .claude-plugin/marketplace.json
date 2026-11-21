@@ -25,11 +25,6 @@
       "name": "sanity",
       "description": "Structured content modeling for Sanity and other headless CMSs.",
       "source": "./sanity"
-    },
-    {
-      "name": "python",
-      "description": "Clean, typed, idiomatic Python.",
-      "source": "./python"
     }
   ]
 }
