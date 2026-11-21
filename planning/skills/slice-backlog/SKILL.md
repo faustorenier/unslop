@@ -79,15 +79,15 @@ plan on its own; a tracker is a separate decision the user makes every time.
 
 When the backlog is approved, ask exactly once, and stop:
 
-> "Vuoi che crei queste issue su GitHub (epiche, task, project board),
->  oppure le lascio come piano qui?"
+> "Vuoi che crei queste issue su GitHub (epiche, task, project board) o su Linear
+>  (progetto, issue, relazioni blocked-by), oppure le lascio come piano qui?"
 
 - **No, or no clear answer** → stop. Leave the backlog in the conversation, or write it to
   a markdown file if the user asks. Do not mention it again.
-- **Yes** → hand off to the project's tracker skill. In Claude Code that is
-  `github-project-setup`. If no such skill is available, drive the tracker CLI directly
-  (`gh issue create`, `gh project create`) and still confirm the full structure before
-  creating anything.
+- **Yes** → hand off to the tracker skill the user chose: `github-project-setup` for GitHub,
+  `linear` for Linear. If that skill is not available, drive the tracker CLI directly
+  (`gh issue create`, `gh project create`; `linear issue create`, `linear issue relation add`)
+  and still confirm the full structure before creating anything.
 
 Pass along, so the tracker step does not re-derive them: the issue bodies as written,
 the `Blocked by` edges, and the ready set.
