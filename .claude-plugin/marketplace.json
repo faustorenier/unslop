@@ -13,7 +13,7 @@
     },
     {
       "name": "planning",
-      "description": "From vague brief to backlog: design interview, PRD with vertical slices, dependency-ordered backlog, GitHub project setup, Linear.",
+      "description": "From idea to Linear: design interview, then one ticket or a PRD with ADRs and vertical-slice tickets.",
       "source": "./planning"
     },
     {

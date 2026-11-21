@@ -54,6 +54,8 @@ linear issue create --team FAU --project "<project>" --title "..." \
 linear issue update <issue-ID> --description-file <file> --no-input
 linear issue comment add <issue-ID> --body-file <file> --no-input --yes
 linear issue relation add <issue-ID> blocked-by <issue-ID> --no-input
+linear project create --team FAU --name "<project>" --description "<≤255 chars>" \
+  --content-file <file> --status backlog --no-input
 linear project update "<project>" --content-file <file> --no-input
 ```
 

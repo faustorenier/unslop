@@ -6,7 +6,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 | Bundle | Skills | Enable |
 |---|---|---|
 | `core` | git-pr-conventions, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
-| `planning` | grill-me, prd-writer, slice-backlog, github-project-setup, linear, docs-reader, figma-reader | user scope, always |
+| `planning` | grill-me, to-ticket, to-prd, to-adr, to-tickets, linear | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
 | `sanity` | content-modeling-best-practices | per project |
 | `python` | python-clean-code | per project |
@@ -78,7 +78,7 @@ and re-run the command to update.
 
 | Situation | Path |
 |---|---|
-| Vague brief, new product or feature | `/planning:grill-me` → `prd-writer` → `slice-backlog` → `github-project-setup` or `linear` (asks first) |
+| New change, feature or product | `/planning:grill-me` → one slice: `/planning:to-ticket`; more: `/planning:to-prd` → `/planning:to-tickets` (ADRs via `to-adr`, rules in `planning/skills/_shared/workflow.md`) |
 | Behaviour change with clear scope | plan mode → `tdd-loop` → verification |
 | Bug | `systematic-debugging` → failing test → `tdd-loop` |
 | Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
@@ -108,6 +108,6 @@ overwrites on update.
 1. Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter.
 2. Use `disable-model-invocation: true` for skills that should run only via `/<bundle>:<name>`:
    the model cannot invoke them and their description costs no context. Today:
-   `planning:grill-me`, `planning:docs-reader`, `planning:figma-reader`.
+   `planning:grill-me`, `planning:to-ticket`, `planning:to-prd`, `planning:to-adr`, `planning:to-tickets`.
 3. Push, then update as shown in Install. Do not add `version` to
    `plugin.json`: without it the commit SHA is the version, so every push is picked up.
