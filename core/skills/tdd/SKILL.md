@@ -1,6 +1,7 @@
 ---
 name: tdd
 description: Enforces strict red-green-refactor test-driven development — a failing test that is run and observed failing before any implementation exists. Use when implementing a Linear issue, a feature or a bug fix, or whenever the user mentions TDD, tests first, red-green-refactor, or asks for the implementation to be test-driven.
+argument-hint: "[Linear issue ID]"
 ---
 
 # TDD loop
