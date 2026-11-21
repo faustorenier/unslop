@@ -1,16 +1,25 @@
 ---
 name: tdd-loop
-description: Enforces strict red-green-refactor test-driven development — a failing test that is run and observed failing before any implementation exists. Use when implementing a feature, fixing a bug, picking up a backlog issue, or whenever the user mentions TDD, tests first, red-green-refactor, or asks for the implementation to be test-driven.
+description: Enforces strict red-green-refactor test-driven development — a failing test that is run and observed failing before any implementation exists. Use when implementing a Linear issue, a feature or a bug fix, or whenever the user mentions TDD, tests first, red-green-refactor, or asks for the implementation to be test-driven.
 ---
 
 # TDD loop
 
 Red, green, refactor. One cycle per acceptance criterion. No shortcuts.
 
+## Starting from a Linear issue
+
+1. Read the issue and its project with the `linear` skill, then the PRD its Context names
+   (`docs/prd/<slug>.md`) and the ADRs in its Constraints. ADRs are binding.
+2. The issue's acceptance criteria are the cycle list, one cycle each. A criterion that is
+   unclear or untestable → ask before starting, don't reinterpret it.
+3. Create the branch per `git-pr-conventions`, with the issue ID (`feat/fau-42-login-form`).
+4. Set the issue to In Progress before the first change.
+
 ## Before the first cycle
 
 - Check the branch. On `main`/`master`, create a feature branch first, named per
-  `git-pr-conventions` (`feat/42-login-form`).
+  `git-pr-conventions` (`feat/fau-42-login-form`).
 - TDD covers logic: domain rules, data, APIs, state, hooks, utilities. It does not cover
   visual work — layout, styling, animation, 3D scenes, copy. For those, skip the loop and
   end by describing exactly what the user should check visually.
@@ -86,3 +95,13 @@ spike and start the real work from RED.
   speculative features, do not "improve" adjacent code, do not widen the scope.
 - Inside `ralph-loop`, "every criterion green and the full suite passing" is the only
   condition for emitting the completion promise.
+
+## Finish
+
+1. Run the whole suite, plus typecheck and lint if the project has them. Show the output.
+2. For visual criteria, describe exactly what the user should check by eye.
+3. From a Linear issue: set it to In Review (never Done, per `linear`), and post the visual
+   checks as a comment if there are any.
+4. Propose the PR per `git-pr-conventions`, with `Closes FAU-42` in the body. Open it only
+   if the user asks.
+5. Suggest `/core:fresh-context-review` before merge.

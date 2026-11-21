@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "core",
-      "description": "Always-on rules: Conventional Commits, strict TDD, systematic debugging, fresh-context review, clean TypeScript.",
+      "description": "Always-on rules: Conventional Commits, strict TDD from Linear issue to PR, systematic debugging, fresh-context review.",
       "source": "./core"
     },
     {
