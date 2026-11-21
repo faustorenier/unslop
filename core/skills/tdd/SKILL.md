@@ -1,5 +1,5 @@
 ---
-name: tdd-loop
+name: tdd
 description: Enforces strict red-green-refactor test-driven development — a failing test that is run and observed failing before any implementation exists. Use when implementing a Linear issue, a feature or a bug fix, or whenever the user mentions TDD, tests first, red-green-refactor, or asks for the implementation to be test-driven.
 ---
 
@@ -13,13 +13,13 @@ Red, green, refactor. One cycle per acceptance criterion. No shortcuts.
    (`docs/prd/<slug>.md`) and the ADRs in its Constraints. ADRs are binding.
 2. The issue's acceptance criteria are the cycle list, one cycle each. A criterion that is
    unclear or untestable → ask before starting, don't reinterpret it.
-3. Create the branch per `git-pr-conventions`, with the issue ID (`feat/fau-42-login-form`).
+3. Create the branch per `core:git`, with the issue ID (`feat/fau-42-login-form`).
 4. Set the issue to In Progress before the first change.
 
 ## Before the first cycle
 
 - Check the branch. On `main`/`master`, create a feature branch first, named per
-  `git-pr-conventions` (`feat/fau-42-login-form`).
+  `core:git` (`feat/fau-42-login-form`).
 - TDD covers logic: domain rules, data, APIs, state, hooks, utilities. It does not cover
   visual work — layout, styling, animation, 3D scenes, copy. For those, skip the loop and
   end by describing exactly what the user should check visually.
@@ -88,7 +88,7 @@ spike and start the real work from RED.
 
 - Announce each phase: `RED: <criterion>`, `GREEN`, `REFACTOR`.
 - Commit at each green, before refactoring, on the feature branch only. Message per
-  `git-pr-conventions`, with the criterion in the subject: `feat(cart): apply bulk discount`.
+  `core:git`, with the criterion in the subject: `feat(cart): apply bulk discount`.
   Never commit on `main`/`master`.
 - If a cycle takes more than a few minutes of work, the step is too big. Shrink it.
 - When all criteria for the issue are green and the suite passes, stop. Do not add
@@ -102,6 +102,6 @@ spike and start the real work from RED.
 2. For visual criteria, describe exactly what the user should check by eye.
 3. From a Linear issue: set it to In Review (never Done, per `linear`), and post the visual
    checks as a comment if there are any.
-4. Propose the PR per `git-pr-conventions`, with `Closes FAU-42` in the body. Open it only
+4. Propose the PR per `core:git`, with `Closes FAU-42` in the body. Open it only
    if the user asks.
-5. Suggest `/core:fresh-context-review` before merge.
+5. Suggest `/core:review` before merge.

@@ -41,7 +41,7 @@ Set In Progress before the first change and In Review when tests and verificatio
 if the user finds a problem. **Never set Done**: the user closes issues.
 
 Do not use `linear issue start`: it checks out a branch named the Linear way, which breaks the branch naming in
-`core:git-pr-conventions`. Create the branch with git and set the state with `linear issue update <issue-ID>`.
+`core:git`. Create the branch with git and set the state with `linear issue update <issue-ID>`.
 
 ## Writing
 

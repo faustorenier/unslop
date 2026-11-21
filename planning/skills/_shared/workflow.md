@@ -71,7 +71,7 @@ Files and modules involved, contracts to respect, pitfalls.
 +++
 ```
 
-- Every acceptance criterion is Given/When/Then and converts directly into one failing test (`tdd-loop`).
+- Every acceptance criterion is Given/When/Then and converts directly into one failing test (`core:tdd`).
   If a criterion cannot be phrased that way, the design is still too vague: go back, don't write a
   fuzzy ticket. Visual work (layout, styling, animation, 3D) gets a "Then the user sees…" criterion
   checked by eye instead.
