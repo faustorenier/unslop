@@ -8,7 +8,6 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 | `core` | git-pr-conventions, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
 | `planning` | grill-me, to-ticket, to-prd, to-adr, to-tickets, linear | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
-| `sanity` | content-modeling-best-practices | per project |
 
 ## Install (once per machine)
 
@@ -29,7 +28,7 @@ claude plugin update planning@fausto-skills
 
 ## Enable a bundle in one project
 
-1. From the project root, once per bundle (`web`, `sanity`):
+1. From the project root, once per per-project bundle (today only `web`):
 
    ```
    claude plugin install web@fausto-skills --scope project
