@@ -1,6 +1,6 @@
 # claude-skills
 
-Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder is a plugin
+Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a plugin
 (a bundle of skills). Skills are invoked as `<bundle>:<skill>`, e.g. `core:tdd`.
 
 | Bundle | Skills | Enable |
@@ -13,40 +13,40 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 
 ```
 /plugin marketplace add faustorenier/claude-skills
-/plugin install core@fausto-skills
-/plugin install planning@fausto-skills
+/plugin install core@unslop
+/plugin install planning@unslop
 ```
 
 GitHub is the only source. After a push, refresh the catalog and the bundles, then restart
 Claude Code:
 
 ```
-claude plugin marketplace update fausto-skills
-claude plugin update core@fausto-skills
-claude plugin update planning@fausto-skills
+claude plugin marketplace update unslop
+claude plugin update core@unslop
+claude plugin update planning@unslop
 ```
 
 ## Enable `web` in one project
 
-1. From the project root: `claude plugin install web@fausto-skills --scope project`
+1. From the project root: `claude plugin install web@unslop --scope project`
    (`--scope local` to enable it only for yourself).
 2. Add the marketplace source to `<project>/.claude/settings.json`. The install command does not
-   write it, and without it nobody else can find `fausto-skills`:
+   write it, and without it nobody else can find `unslop`:
 
    ```json
    {
      "extraKnownMarketplaces": {
-       "fausto-skills": {
+       "unslop": {
          "source": { "source": "github", "repo": "faustorenier/claude-skills" }
        }
      },
-     "enabledPlugins": { "web@fausto-skills": true }
+     "enabledPlugins": { "web@unslop": true }
    }
    ```
 
 3. Commit `.claude/settings.json`. Collaborators need read access to this private repo.
 
-Update after a push: `claude plugin update web@fausto-skills --scope project`.
+Update after a push: `claude plugin update web@unslop --scope project`.
 
 ## Workflow
 
