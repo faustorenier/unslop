@@ -47,13 +47,26 @@ Breaking change: append `!` after type, or add `BREAKING CHANGE:` footer.
 - Subject line ≤ 72 characters
 - Scope: optional noun in parentheses — `fix(parser):`, `feat(api):`
 - Body: explain *why*, not what. Wrap at 72 chars
-- Footer: `Closes #123`, `Refs #456`
+- Footer: `Closes <issue>`, `Refs <issue>` (see Issue IDs)
 - One logical change per commit
 - Always English, even when the conversation is in another language
 
+## Issue IDs
+
+`<issue>` is the ID in the project's tracker, written the way that tracker recognises it:
+
+| Tracker | In footers and PR body | In branch names |
+|---|---|---|
+| GitHub Issues | `#42` | `42` |
+| Linear | `FAU-42` | `fau-42` |
+
+Never write `#42` for a Linear issue: GitHub reads it as its own issue or PR number, and Linear
+does not link it. With the Linear GitHub integration, the ID in the branch name links the PR and
+`Closes FAU-42` moves the issue when the PR merges.
+
 ## Branch naming
 
-`<type>/<issue>-<short-slug>`, lowercase, hyphens: `feat/42-login-form`, `fix/108-cart-total`.
+`<type>/<issue>-<short-slug>`, lowercase, hyphens: `feat/42-login-form`, `fix/fau-108-cart-total`.
 No issue → `<type>/<short-slug>`. Type is one of the commit types above.
 
 ## PR title
@@ -66,7 +79,7 @@ Same format as commit subject: `<type>[scope]: <description>`
 ## Changes
 ## Testing
 ## Breaking changes
-Closes #<issue>
+Closes <issue>
 ```
 
 ## Gotchas
