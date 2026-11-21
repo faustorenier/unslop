@@ -53,20 +53,15 @@ Breaking change: append `!` after type, or add `BREAKING CHANGE:` footer.
 
 ## Issue IDs
 
-`<issue>` is the ID in the project's tracker, written the way that tracker recognises it:
+`<issue>` is the Linear issue ID: `FAU-42` in footers and the PR body, `fau-42` in branch names.
 
-| Tracker | In footers and PR body | In branch names |
-|---|---|---|
-| GitHub Issues | `#42` | `42` |
-| Linear | `FAU-42` | `fau-42` |
-
-Never write `#42` for a Linear issue: GitHub reads it as its own issue or PR number, and Linear
-does not link it. With the Linear GitHub integration, the ID in the branch name links the PR and
-`Closes FAU-42` moves the issue when the PR merges.
+Never write `#42`: GitHub reads it as its own issue or PR number, and Linear does not link it.
+With the Linear GitHub integration, the ID in the branch name links the PR and `Closes FAU-42`
+moves the issue to Done when the PR merges.
 
 ## Branch naming
 
-`<type>/<issue>-<short-slug>`, lowercase, hyphens: `feat/42-login-form`, `fix/fau-108-cart-total`.
+`<type>/<issue>-<short-slug>`, lowercase, hyphens: `feat/fau-42-login-form`, `fix/fau-108-cart-total`.
 No issue → `<type>/<short-slug>`. Type is one of the commit types above.
 
 ## PR title
