@@ -6,7 +6,7 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 | Bundle | Skills | Enable |
 |---|---|---|
 | `core` | git-pr-conventions, tdd-loop, systematic-debugging, fresh-context-review, typescript-clean-code | user scope, always |
-| `planning` | grill-me, prd-writer, slice-backlog, github-project-setup, docs-reader, figma-reader | user scope, always |
+| `planning` | grill-me, prd-writer, slice-backlog, github-project-setup, linear, docs-reader, figma-reader | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
 | `sanity` | content-modeling-best-practices | per project |
 | `python` | python-clean-code | per project |
@@ -78,7 +78,7 @@ and re-run the command to update.
 
 | Situation | Path |
 |---|---|
-| Vague brief, new product or feature | `/planning:grill-me` → `prd-writer` → `slice-backlog` → `github-project-setup` (asks first) |
+| Vague brief, new product or feature | `/planning:grill-me` → `prd-writer` → `slice-backlog` → `github-project-setup` or `linear` (asks first) |
 | Behaviour change with clear scope | plan mode → `tdd-loop` → verification |
 | Bug | `systematic-debugging` → failing test → `tdd-loop` |
 | Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
