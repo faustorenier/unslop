@@ -9,12 +9,15 @@ Red, green, refactor. One cycle per acceptance criterion. No shortcuts.
 
 ## Starting from a Linear issue
 
-1. Read the issue and its project with the `linear` skill, then the PRD its Context names
+1. Check its `blocked-by` relations (`linear issue relation list`). Any blocker not Done or
+   Canceled → **stop**: list the blockers and their state, and don't start. Its code is not
+   on `main` yet.
+2. Read the issue and its project with the `linear` skill, then the PRD its Context names
    (`docs/prd/<slug>.md`) and the ADRs in its Constraints. ADRs are binding.
-2. The issue's acceptance criteria are the cycle list, one cycle each. A criterion that is
+3. The issue's acceptance criteria are the cycle list, one cycle each. A criterion that is
    unclear or untestable → ask before starting, don't reinterpret it.
-3. Create the branch per `core:git`, with the issue ID (`feat/fau-42-login-form`).
-4. Set the issue to In Progress before the first change.
+4. Create the branch per `core:git`, with the issue ID (`feat/fau-42-login-form`).
+5. Set the issue to In Progress before the first change.
 
 ## Before the first cycle
 
@@ -99,9 +102,11 @@ spike and start the real work from RED.
 ## Finish
 
 1. Run the whole suite, plus typecheck and lint if the project has them. Show the output.
-2. For visual criteria, describe exactly what the user should check by eye.
-3. From a Linear issue: set it to In Review (never Done, per `linear`), and post the visual
-   checks as a comment if there are any.
-4. Propose the PR per `core:git`, with `Closes FAU-42` in the body. Open it only
+2. Run `core:review` on the branch. It forks a clean context, so it stays impartial.
+3. Fix the findings whose correction is obvious: a behaviour change goes through a new
+   RED → GREEN cycle, a pure cleanup goes straight in. Re-run the suite.
+4. For visual criteria, describe exactly what the user should check by eye.
+5. From a Linear issue: set it to In Review (never Done, per `linear`), and post one comment
+   with the remaining review findings and the visual checks, if there are any.
+6. Propose the PR per `core:git`, with `Closes FAU-42` in the body. Open it only
    if the user asks.
-5. Suggest `/core:review` before merge.

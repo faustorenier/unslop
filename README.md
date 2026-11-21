@@ -77,13 +77,13 @@ and re-run the command to update.
 | Situation | Path |
 |---|---|
 | Change to track on Linear (feature, product, small change) | `/planning:grill-me` → one slice: `/planning:to-ticket`; more: `/planning:to-prd` → `/planning:to-tickets` (ADRs via `to-adr`, rules in `planning/skills/_shared/workflow.md`) |
-| Implement a Linear issue | `core:tdd` (issue → branch → cycles → In Review → PR) → `core:review` |
+| Implement a Linear issue | `core:tdd` (blockers → branch → cycles → `core:review` → In Review → PR) |
 | Small untracked change with clear scope | plan mode → `core:tdd` → verification |
 | Bug | `core:debug` → failing test → `core:tdd` (`/planning:to-ticket` only if it must be tracked) |
 | Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
 | Landing, portfolio, marketing site | `design-taste-frontend` + `seo-aeo-best-practices` + `a11y` |
 | Dashboard, admin, forms, tables | `product-ui` + `a11y`; logic through `core:tdd` |
-| Done, before merge | `core:review` (runs in a forked context) or `/code-review` |
+| Done, before merge | `core:review` (already run by `core:tdd`; re-run by hand after changes) or `/code-review` |
 
 ## Ralph loop + TDD recipe
 
