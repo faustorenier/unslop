@@ -1,7 +1,7 @@
 ---
 name: fresh-context-review
 description: Reviews a diff, branch, or pull request against its acceptance criteria from a forked clean context, as an adversarial reviewer who did not write the code. Use when the user asks to review changes, review a PR, check a branch before merge, or says the implementation is done and needs checking.
-argument-hint: "[PR number | branch | issue number]"
+argument-hint: "[PR number | branch | Linear issue ID]"
 context: fork
 ---
 
@@ -17,9 +17,10 @@ acceptance criteria, the built-in `/code-review` is the better tool.
 
 ## Setup
 
-1. Get the diff (`gh pr diff`, or `git diff <base>...HEAD`). Get the issue (`gh issue view`)
-   or the PRD section in `docs/prd/` it claims to satisfy. No criteria anywhere → say so
-   and review against the PR description, flagging that as a weakness.
+1. Get the diff (`gh pr diff`, or `git diff <base>...HEAD`). Find the Linear issue ID in the
+   target or the branch name (`feat/fau-42-…` → `FAU-42`) and read the issue and its project
+   with the `linear` skill, then the PRD its Context names and the ADRs in its Constraints.
+   No issue → review against the PR description, flagging that as a weakness.
 2. Read the acceptance criteria **first**, before the code. This is what you are checking
    against — not your own idea of what the code should look like.
 3. If the diff is too large to hold comfortably in a clean context, stop: say the PR
@@ -54,7 +55,8 @@ in telemetry, unvalidated input crossing a trust boundary, dependency additions.
 **5. Architecture**
 Does the change fit the module boundaries that already exist, or does it punch through
 them? Does it make a module shallower (more exports, less encapsulated)? Is there
-duplication of something that already exists elsewhere in the codebase?
+duplication of something that already exists elsewhere in the codebase? Does it respect
+every ADR the issue lists? A violation is a finding that names the ADR.
 
 **6. Slop**
 Functionally correct but wrong in taste: invented abstractions with one caller, defensive
@@ -73,6 +75,6 @@ Rank by severity. State plainly if nothing is wrong.
 ## After review
 
 Do not fix anything: you are the reviewer. End with a recommendation per finding — a
-one-line correction the author would obviously accept, or a new backlog issue. The main
-session asks the user before creating any issue. Manual QA of the end-to-end behaviour is
+one-line correction the author would obviously accept, or a follow-up ticket via
+`/planning:to-ticket`. The main session asks the user before creating any issue. Manual QA of the end-to-end behaviour is
 still required: the review checks the code, not the system.
