@@ -57,7 +57,7 @@ way; nothing is written to the repo or Linear before you approve the draft. Rule
 `planning/skills/_shared/workflow.md`.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+%%{init: {"look": "classic", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
 flowchart TB
   subgraph card[" "]
     direction TB
@@ -70,7 +70,8 @@ flowchart TB
     tickets --> issue
     issue --> tdd["core:tdd"]
   end
-  style card fill:#18181b,stroke:#2a2a2e
+  classDef default rx:5,ry:5,stroke-width:1px
+  style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
 ```
 
 ### Implementation
@@ -79,7 +80,7 @@ flowchart TB
 clean context. After later changes, re-run `core:review` or `/code-review` by hand.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+%%{init: {"look": "classic", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
 flowchart TB
   subgraph card[" "]
     direction TB
@@ -96,7 +97,9 @@ flowchart TB
     more -- No --> checks["Checks · core:review"]
     checks --> pr["In Review · PR"]
   end
-  style card fill:#18181b,stroke:#2a2a2e
+  classDef default rx:5,ry:5,stroke-width:1px
+  style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
+  style cycle rx:6,ry:6
 ```
 
 ### Bugs
@@ -105,7 +108,7 @@ flowchart TB
 Use `/planning:to-ticket` only if the bug must be tracked.
 
 ```mermaid
-%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+%%{init: {"look": "classic", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
 flowchart TB
   subgraph card[" "]
     direction TB
@@ -117,7 +120,8 @@ flowchart TB
     ok -- Yes --> test["Failing test"]
     test --> tdd["core:tdd"]
   end
-  style card fill:#18181b,stroke:#2a2a2e
+  classDef default rx:5,ry:5,stroke-width:1px
+  style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
 ```
 
 ### Which `web` skills
