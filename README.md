@@ -17,8 +17,8 @@ Personal Claude Code plugin marketplace (`fausto-skills`). Each top-level folder
 /plugin install planning@fausto-skills
 ```
 
-GitHub is the only source. After a push, refresh the catalog and then the installed bundles,
-and restart Claude Code:
+GitHub is the only source. After a push, refresh the catalog and the bundles, then restart
+Claude Code:
 
 ```
 claude plugin marketplace update fausto-skills
@@ -26,19 +26,12 @@ claude plugin update core@fausto-skills
 claude plugin update planning@fausto-skills
 ```
 
-## Enable a bundle in one project
+## Enable `web` in one project
 
-1. From the project root, once per per-project bundle (today only `web`):
-
-   ```
-   claude plugin install web@fausto-skills --scope project
-   ```
-
-   This writes `enabledPlugins` to `<project>/.claude/settings.json`. Use `--scope local` instead
-   to enable it only for yourself (`.claude/settings.local.json`, usually git-ignored).
-
-2. Add the marketplace source to the same file. The install command does not write it, and
-   without it Claude Code on another machine or for a collaborator cannot find `fausto-skills`:
+1. From the project root: `claude plugin install web@fausto-skills --scope project`
+   (`--scope local` to enable it only for yourself).
+2. Add the marketplace source to `<project>/.claude/settings.json`. The install command does not
+   write it, and without it nobody else can find `fausto-skills`:
 
    ```json
    {
@@ -47,66 +40,102 @@ claude plugin update planning@fausto-skills
          "source": { "source": "github", "repo": "faustorenier/claude-skills" }
        }
      },
-     "enabledPlugins": {
-       "web@fausto-skills": true
-     }
+     "enabledPlugins": { "web@fausto-skills": true }
    }
    ```
 
-3. Commit `.claude/settings.json`. Whoever opens the project is prompted to add the marketplace
-   and install the bundle; they need read access to this private repo.
+3. Commit `.claude/settings.json`. Collaborators need read access to this private repo.
 
-4. Check: `claude plugin list` shows the bundle with `Scope: project`, and a new session in the
-   project lists `web:*` skills while sessions elsewhere do not.
-
-Update a project bundle after a push: `claude plugin update web@fausto-skills --scope project`.
-
-## Optional third-party skills per project
-
-Official or widely used skills that complement `web`. Install them only in the projects that
-use the library. `npx skills add` copies files into `<project>/.claude/skills/`: commit them,
-and re-run the command to update.
-
-| Skill | Use with | Install (from the project root) |
-|---|---|---|
-| shadcn/ui (official) | `product-ui` in projects with `components.json` | `npx skills add shadcn/ui` |
-| accessibility (addyosmani, MIT) | audit-oriented alternative or complement to `a11y` | `npx skills add addyosmani/web-quality-skills --skill accessibility --agent claude-code` |
+Update after a push: `claude plugin update web@fausto-skills --scope project`.
 
 ## Workflow
 
-| Situation | Path |
+### Planning
+
+An idea becomes one Linear issue or a PRD with vertical-slice issues. ADRs are recorded on the
+way; nothing is written to the repo or Linear before you approve the draft. Rules:
+`planning/skills/_shared/workflow.md`.
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+flowchart TB
+  subgraph card[" "]
+    direction TB
+    grill["grill-me"] --> size{"Slices?"}
+    size -- one --> ticket["to-ticket"]
+    size -- "2+" --> prd["to-prd"]
+    prd --> project["PRD + Linear project"]
+    project --> tickets["to-tickets"]
+    ticket --> issue["Linear issue(s)"]
+    tickets --> issue
+    issue --> tdd["core:tdd"]
+  end
+  style card fill:#18181b,stroke:#2a2a2e
+```
+
+### Implementation
+
+`core:tdd` runs one red-green-refactor cycle per acceptance criterion, then `core:review` in a
+clean context. After later changes, re-run `core:review` or `/code-review` by hand.
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+flowchart TB
+  subgraph card[" "]
+    direction TB
+    issue["Linear issue"] --> blk{"Blockers done?"}
+    blk -- No --> stop["Stop"]
+    blk -- Yes --> branch["Branch · In Progress"]
+    small["Small change"] -- plan mode --> branch
+    branch --> red
+    subgraph cycle["one cycle per criterion"]
+      direction TB
+      red["RED"] --> green["GREEN · commit"] --> refactor["REFACTOR"] --> more{"More?"}
+      more -- Yes --> red
+    end
+    more -- No --> checks["Checks · core:review"]
+    checks --> pr["In Review · PR"]
+  end
+  style card fill:#18181b,stroke:#2a2a2e
+```
+
+### Bugs
+
+`core:debug` finds the root cause before any fix, then hands a failing test to `core:tdd`.
+Use `/planning:to-ticket` only if the bug must be tracked.
+
+```mermaid
+%%{init: {"theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+flowchart TB
+  subgraph card[" "]
+    direction TB
+    repro["Reproduce"] --> hyp["Hypothesis"]
+    hyp --> ok{"Confirmed?"}
+    ok -- No --> fails{"3 failed fixes?"}
+    fails -- No --> hyp
+    fails -- Yes --> stop["Stop · discuss"]
+    ok -- Yes --> test["Failing test"]
+    test --> tdd["core:tdd"]
+  end
+  style card fill:#18181b,stroke:#2a2a2e
+```
+
+### Which `web` skills
+
+| Work | Skills |
 |---|---|
-| Change to track on Linear (feature, product, small change) | `/planning:grill-me` → one slice: `/planning:to-ticket`; more: `/planning:to-prd` → `/planning:to-tickets` (ADRs via `to-adr`, rules in `planning/skills/_shared/workflow.md`) |
-| Implement a Linear issue | `core:tdd` (blockers → branch → cycles → `core:review` → In Review → PR) |
-| Small untracked change with clear scope | plan mode → `core:tdd` → verification |
-| Bug | `core:debug` → failing test → `core:tdd` (`/planning:to-ticket` only if it must be tracked) |
-| Visual work (layout, animation, 3D) | no TDD; describe what to check visually |
+| Visual (layout, animation, 3D) | no TDD; describe what to check visually |
 | Landing, portfolio, marketing site | `design-taste-frontend` + `seo-aeo-best-practices` + `a11y` |
 | Dashboard, admin, forms, tables | `product-ui` + `a11y`; logic through `core:tdd` |
-| Done, before merge | `core:review` (already run by `core:tdd`; re-run by hand after changes) or `/code-review` |
 
-## Ralph loop + TDD recipe
-
-`ralph-loop` is the outer loop (re-feeds the prompt on stop), `core:tdd` is the discipline inside
-each iteration. Run it on a feature branch: `core:tdd` commits at each green and Ralph reads the
-git history to see previous work.
-
-```
-/ralph-loop "Work on Linear issue FAU-42 using the core:tdd skill. One acceptance
-criterion per iteration. Output <promise>ALL_GREEN</promise> only when every criterion is
-green and the full suite passes." --completion-promise ALL_GREEN --max-iterations 20
-```
-
-Always set `--max-iterations`. Review the result outside the loop with `core:review`.
+In projects with `components.json`, add the official shadcn skill: `npx skills add shadcn/ui`
+(commit `.claude/skills/`).
 
 ## Adding or editing a skill
 
-Work in any clone of this repo, never in `~/.claude/plugins/marketplaces/`, which Claude Code
-overwrites on update.
-
-1. Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter.
-2. Use `disable-model-invocation: true` for skills that should run only via `/<bundle>:<name>`:
-   the model cannot invoke them and their description costs no context. Today:
-   `planning:grill-me`, `planning:to-ticket`, `planning:to-prd`, `planning:to-adr`, `planning:to-tickets`.
-3. Push, then update as shown in Install. Do not add `version` to
-   `plugin.json`: without it the commit SHA is the version, so every push is picked up.
+- Work in a clone of this repo, never in `~/.claude/plugins/marketplaces/` (overwritten on update).
+- Create `<bundle>/skills/<skill-name>/SKILL.md` with `name` and `description` frontmatter. Add
+  `disable-model-invocation: true` for skills that run only via `/<bundle>:<name>`: their
+  description then costs no context.
+- Push, then update as in Install. Never add `version` to `plugin.json`: the commit SHA is the
+  version, so every push is picked up.

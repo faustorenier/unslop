@@ -97,8 +97,6 @@ spike and start the real work from RED.
 - If a cycle takes more than a few minutes of work, the step is too big. Shrink it.
 - When all criteria for the issue are green and the suite passes, stop. Do not add
   speculative features, do not "improve" adjacent code, do not widen the scope.
-- Inside `ralph-loop`, "every criterion green and the full suite passing" is the only
-  condition for emitting the completion promise.
 
 ## Finish
 
