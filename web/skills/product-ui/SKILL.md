@@ -108,6 +108,6 @@ not by adding `dark:` to every component.
 
 ## Verification
 
-- Logic (validation rules, state transitions, table query building) goes through `tdd-loop`.
+- Logic (validation rules, state transitions, table query building) goes through `core:tdd`.
 - Visual result: describe what to check — the four states, both themes, the narrowest
   breakpoint, keyboard-only use of the main flow — and let the user verify.

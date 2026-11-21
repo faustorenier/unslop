@@ -1,5 +1,5 @@
 ---
-name: systematic-debugging
+name: debug
 description: Finds the root cause of a bug before any fix is proposed — reproduce, gather evidence, one hypothesis at a time, failing test, single fix. Use when encountering any bug, test failure, build failure, or unexpected behavior, before proposing fixes.
 metadata:
   adapted-from: obra/superpowers systematic-debugging (MIT, see LICENSE)
@@ -37,7 +37,7 @@ and guesses compound.
 ## 4. Fix
 
 1. Write a failing test that reproduces the bug, and watch it fail for the right reason
-   (follow `tdd-loop`). No test framework → a one-off reproduction script.
+   (follow `core:tdd`). No test framework → a one-off reproduction script.
 2. One fix, for the root cause. No "while I'm here" changes.
 3. Run the test and the whole suite. Confirm the original symptom is gone.
 

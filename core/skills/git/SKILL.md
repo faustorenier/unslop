@@ -1,16 +1,16 @@
 ---
-name: git-pr-conventions
+name: git
 description: Enforces Conventional Commits v1.0.0 for commit messages, PR titles, and branch naming. Use when writing a commit message, creating a pull request, naming a branch, writing a changelog, or when the user mentions git, PR, commit, fix, feature, improvement, breaking change, or versioning.
 allowed-tools: Bash(git *)
 ---
 
 # Git & PR conventions
 
-Single source of truth for git in every project. Other skills (`tdd-loop`) defer here.
+Single source of truth for git in every project. Other skills (`core:tdd`) defer here.
 
 ## When to commit
 
-- Run `git commit` only when the user asks, or inside `tdd-loop` on a feature branch.
+- Run `git commit` only when the user asks, or inside `core:tdd` on a feature branch.
 - Never commit on `main`/`master`. Create a branch first (see Branch naming).
 - Otherwise, end the task with the commit message as a copy-pasteable block.
 - Keep any `Co-Authored-By` trailer the harness asks for.

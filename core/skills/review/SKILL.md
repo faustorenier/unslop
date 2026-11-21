@@ -1,5 +1,5 @@
 ---
-name: fresh-context-review
+name: review
 description: Reviews a diff, branch, or pull request against its acceptance criteria from a forked clean context, as an adversarial reviewer who did not write the code. Use when the user asks to review changes, review a PR, check a branch before merge, or says the implementation is done and needs checking.
 argument-hint: "[PR number | branch | Linear issue ID]"
 context: fork
