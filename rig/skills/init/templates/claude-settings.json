@@ -1,7 +1,11 @@
 {
   "extraKnownMarketplaces": {
     "unslop": {
-      "source": { "source": "github", "repo": "faustorenier/unslop" }
+      "source": {
+        "source": "github",
+        "repo": "faustorenier/unslop"
+      },
+      "autoUpdate": true
     }
   },
   "enabledPlugins": {

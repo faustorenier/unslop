@@ -33,6 +33,11 @@ claude plugin update planning@unslop
 claude plugin update rig@unslop
 ```
 
+Or turn on auto-update once: `/plugin` → Marketplaces → `unslop` → auto-update. Claude Code then
+refreshes the catalog and the installed bundles in the background of each interactive session;
+run `/reload-plugins` when it says a plugin was updated. Third-party marketplaces have it off by
+default. Projects set up with `/rig:init` turn it on through their `.claude/settings.json`.
+
 ## Workflow
 
 ### Planning

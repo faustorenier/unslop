@@ -71,8 +71,9 @@ One team per product (see `planning:linear`, "New team").
 5. **`.gitignore`**: add the lines of `templates/gitignore` that are missing.
 6. **`.claude/settings.json`**: from `templates/claude-settings.json`. It makes Claude Code offer
    the unslop plugins to anyone who opens the repository (another machine, a colleague, a cloud
-   session). Existing file → merge in only the missing `extraKnownMarketplaces.unslop` and
-   `enabledPlugins` entries, keeping every other key.
+   session) and keeps them updated (`autoUpdate`, off by default for third-party marketplaces).
+   Existing file → merge in only the missing `extraKnownMarketplaces.unslop` and `enabledPlugins`
+   entries, keeping every other key.
 
 ## 5. This machine
 
