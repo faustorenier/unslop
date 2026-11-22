@@ -20,6 +20,11 @@
       "name": "web",
       "description": "Frontend for sites and web apps: anti-slop design direction, SEO/AEO, React and Next.js performance rules.",
       "source": "./web"
+    },
+    {
+      "name": "rig",
+      "description": "Multi-agent rig: set up a project, then develop Linear issues with a developer and a reviewer agent in Herdr, one at a time or as an autonomous loop.",
+      "source": "./rig"
     }
   ]
 }

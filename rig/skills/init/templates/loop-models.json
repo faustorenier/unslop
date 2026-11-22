@@ -1,0 +1,4 @@
+{
+  "developer": { "tool": "claude", "model": "sonnet", "effort": "high" },
+  "reviewer": { "tool": "claude", "model": "opus", "effort": "high" }
+}
