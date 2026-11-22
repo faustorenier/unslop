@@ -51,7 +51,7 @@ claude plugin update rig@unslop
    }
    ```
 
-3. Commit `.claude/settings.json`. Collaborators need read access to this private repo.
+3. Commit `.claude/settings.json`.
 
 Update after a push: `claude plugin update web@unslop --scope project`.
 
@@ -170,6 +170,33 @@ flowchart TB
 
 In projects with `components.json`, add the official shadcn skill: `npx skills add shadcn/ui`
 (commit `.claude/skills/`).
+
+## Collaboration
+
+This repository is public: anyone can install the plugins, and only the owner can change them.
+Colleagues need no access to it. Suggestions come as issues or pull requests from forks, merged
+only by the owner.
+
+A colleague needs: collaborator access to the project repository, membership of the Linear
+workspace and of the project's team (named in its `.linear.toml`).
+
+### Join a project already set up with `/rig:init`
+
+1. Install `claude`, `gh` (`gh auth login`), `linear` (`linear auth login` with their own API key),
+   `herdr` (`herdr integration install claude`), `jq`, Node, and `opencode` if `loop-models.json`
+   uses it.
+2. Clone the project and open `claude` in it. `.claude/settings.json` makes Claude Code offer the
+   unslop plugins: accept.
+3. Run `/rig:init`. It finds the repo, team and files already in place and leaves them alone; it
+   only sets up this machine (the `auto-dev` link, the Herdr checks) and runs the preflight, which
+   lists anything still missing.
+
+### Working together
+
+- **One `auto-dev` per Linear project at a time.** Two loops on the same project pick the same
+  issue. Split the work by project, or use `/rig:dev-loop` on different issues.
+- Everyone merges PRs into `main` themselves; the rig never does.
+- `loop-models.json` is shared: a change to the agents applies to everyone after they pull.
 
 ## Adding or editing a skill
 
