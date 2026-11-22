@@ -84,9 +84,10 @@ if (( skip_verify )); then
   echo "  skip  verification commands"
 else
   # The commands are the shell block under "## Verification" in CLAUDE.md.
-  verify=$(awk '/^## Verification/{f=1; next} f && /^```/{if (b) exit; b=1; next} f && b' CLAUDE.md 2>/dev/null)
+  verify=$(awk '/^## Verification/{f=1; next} f && /^```/{if (b) exit; b=1; next} f && b' CLAUDE.md 2>/dev/null \
+    | grep -v '^[[:space:]]*\(#\|$\)')
   if [[ -z "$verify" ]]; then
-    fail "verification" "add a ## Verification block to CLAUDE.md"
+    fail "verification" "add commands to the ## Verification block of CLAUDE.md, then run /rig:init"
   else
     while IFS= read -r cmd; do
       [[ -z "$cmd" ]] && continue

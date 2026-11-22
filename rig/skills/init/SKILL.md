@@ -31,10 +31,11 @@ Report in a short table what exists and what is missing:
 Only for what is missing:
 
 1. No git repository: `git init -b main`.
-2. No stack yet (nothing to build or test): the stack is the user's choice, never this skill's.
-   Ask which scaffolding command to use (`npx create-next-app@latest .`, `npm create vite@latest .`,
-   ...). Run it on a yes, or let the user run it, then diagnose again. Without a stack the rig has
-   no verification commands, so stop until one exists.
+2. No stack yet (nothing to build or test): the stack is the user's choice, never this skill's,
+   and it is often settled later in `/planning:grill-me`. Offer to run a scaffolding command now
+   (`npx create-next-app@latest .`, `npm create vite@latest .`, ...) or to continue without one.
+   Without a stack, everything else is still set up and the verification commands stay pending
+   (step 4.1).
 3. No `origin`: offer `gh repo create <kebab-name> --private --source=. --remote=origin`. The
    first push waits for the commit in step 6.
 
@@ -53,16 +54,23 @@ One team per product (see `planning:linear`, "New team").
 1. **Verification commands**: from the detected scripts, in this order: typecheck, lint, test,
    build, written for the package manager (`npm run test`, `pnpm test`, ...). They must exit on
    their own: a watch-mode `test` script needs a non-watch form (`vitest run`). Confirm the list
-   with the user. No commands at all → stop: the rig needs at least one check.
+   with the user. No commands yet → use the single line
+   `# pending: add verification commands, then run /rig:init again`. The rig preflight fails on
+   it, so `/rig:dev-loop` and `auto-dev` refuse to start until a later `/rig:init` replaces it.
 2. **`CLAUDE.md`**: from `templates/claude-sections.md`, with `{{VERIFICATION_COMMANDS}}` replaced
    by the confirmed commands, one per line. No `CLAUDE.md` → create it with a `# <Product>` title
    and both sections. Existing → append only the missing section; an existing `## Verification`
-   is kept as it is, and its commands are the ones the rig uses.
+   is kept as it is, and its commands are the ones the rig uses, unless it holds only the pending
+   line: then replace that line with the confirmed commands.
 3. **`AGENTS.md`**: from `templates/AGENTS.md` with the same commands. Existing → append only the
    lines it lacks, never rewrite.
 4. **`loop-models.json`**: copy `templates/loop-models.json` if missing. Say what it sets
    (developer Claude Sonnet, reviewer Claude Opus, both `high`) and that `/rig:dev-loop` reads it.
 5. **`.gitignore`**: add the lines of `templates/gitignore` that are missing.
+6. **`.claude/settings.json`**: from `templates/claude-settings.json`. It makes Claude Code offer
+   the unslop plugins to anyone who opens the repository (another machine, a colleague, a cloud
+   session). Existing file → merge in only the missing `extraKnownMarketplaces.unslop` and
+   `enabledPlugins` entries, keeping every other key.
 
 ## 5. This machine
 
@@ -76,8 +84,9 @@ Once per machine, skip what is already in place:
 
 ## 6. Close
 
-1. Run `../../bin/preflight.sh`. Outside Herdr its Herdr check fails: say so, it is expected here,
-   and every other check must pass.
+1. Run `../../bin/preflight.sh`. Outside Herdr its Herdr check fails, and with pending
+   verification commands so does the verification check: say so, both are expected here, and
+   every other check must pass.
 2. Show `git status` and offer one commit, `chore: set up rig workflow`, with the files this run
    created or changed. Commit and push (`git push -u origin main`) only after a yes.
 3. End with the next steps: open Herdr in this folder, `/planning:grill-me` for the first feature,
