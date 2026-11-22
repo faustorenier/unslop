@@ -3,7 +3,7 @@
 - Planning: `/planning:grill-me` → `/planning:to-ticket` or `/planning:to-prd` →
   `/planning:to-tickets`. Linear issues live in the team named in `.linear.toml`.
 - One issue, inside Herdr: `/rig:dev-loop <ISSUE>`. A developer and a reviewer agent, set in
-  `loop-models.json`, work in Herdr panes; it pushes the branch, opens the PR and leaves the issue
+  `loop-models.json` (personal override: gitignored `loop-models.local.json`), work in Herdr panes; it pushes the branch, opens the PR and leaves the issue
   In Review. The user merges. Delicate issues, or outside Herdr: `/core:tdd <ISSUE>`.
 - Whole project, inside Herdr: `auto-dev "<project>" [max-issues] [base]`. Issues merge into
   `auto/<project-slug>`; when nothing is left it opens one PR into `main`. The user merges.

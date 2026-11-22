@@ -24,7 +24,9 @@ Names used below, with `<id>` the issue ID in lowercase (`fau-42`):
 
 ## Agents
 
-Read `loop-models.json` at the repository root. Each role has the same shape:
+Read `loop-models.json` at the repository root (the project's shared default), then
+`loop-models.local.json` if it exists (a personal, gitignored choice): each role it names
+replaces that role from the shared file. Each role has the same shape:
 
 ```json
 {
