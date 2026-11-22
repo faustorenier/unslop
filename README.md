@@ -51,7 +51,7 @@ claude plugin update rig@unslop
    }
    ```
 
-3. Commit `.claude/settings.json`. Collaborators need read access to this private repo.
+3. Commit `.claude/settings.json`. Collaborators need read access to this private repo (see Collaboration).
 
 Update after a push: `claude plugin update web@unslop --scope project`.
 
@@ -170,6 +170,42 @@ flowchart TB
 
 In projects with `components.json`, add the official shadcn skill: `npx skills add shadcn/ui`
 (commit `.claude/skills/`).
+
+## Collaboration
+
+This repository is private. Anyone who installs these plugins needs read access to it, because
+Claude Code clones the marketplace with their own git credentials.
+
+### Give access
+
+- **Repository on a personal account** (today): repo Settings → Collaborators → Add people, or
+  `gh api -X PUT repos/faustorenier/unslop/collaborators/<username>`. Personal repositories have no
+  read-only role: a collaborator can also push. Protect `main` (Settings → Branches, require a pull
+  request) so nobody writes to it directly.
+- **True read-only access** needs a GitHub organization: transfer the repository there and add
+  people with the **Read** role. The address changes to `<org>/unslop`: update this README and
+  `rig/skills/init/templates/claude-settings.json`.
+
+A colleague also needs: collaborator access to the project repository, membership of the Linear
+workspace and of the project's team (named in its `.linear.toml`).
+
+### Join a project already set up with `/rig:init`
+
+1. Install `claude`, `gh` (`gh auth login`), `linear` (`linear auth login` with their own API key),
+   `herdr` (`herdr integration install claude`), `jq`, Node, and `opencode` if `loop-models.json`
+   uses it.
+2. Clone the project and open `claude` in it. `.claude/settings.json` makes Claude Code offer the
+   unslop plugins: accept. Without access to this repository the install fails.
+3. Run `/rig:init`. It finds the repo, team and files already in place and leaves them alone; it
+   only sets up this machine (the `auto-dev` link, the Herdr checks) and runs the preflight, which
+   lists anything still missing.
+
+### Working together
+
+- **One `auto-dev` per Linear project at a time.** Two loops on the same project pick the same
+  issue. Split the work by project, or use `/rig:dev-loop` on different issues.
+- Everyone merges PRs into `main` themselves; the rig never does.
+- `loop-models.json` is shared: a change to the agents applies to everyone after they pull.
 
 ## Adding or editing a skill
 
