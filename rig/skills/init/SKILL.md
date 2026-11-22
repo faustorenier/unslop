@@ -24,7 +24,7 @@ Report in a short table what exists and what is missing:
 - Stack: package manager (`package-lock.json` → npm, `pnpm-lock.yaml` → pnpm, `yarn.lock` → yarn),
   scripts for typecheck, test, build, lint.
 - `CLAUDE.md` (and whether it has `## Workflow` and `## Verification`), `AGENTS.md`,
-  `loop-models.json`, `.linear.toml`, `.gitignore` entries `.auto-dev/` and `.reviews/`.
+  `loop-models.json`, `.linear.toml`, `.gitignore` entries `.auto-dev/`, `.reviews/` and `loop-models.local.json`.
 
 ## 2. Repository
 
@@ -65,7 +65,9 @@ One team per product (see `planning:linear`, "New team").
 3. **`AGENTS.md`**: from `templates/AGENTS.md` with the same commands. Existing → append only the
    lines it lacks, never rewrite.
 4. **`loop-models.json`**: copy `templates/loop-models.json` if missing. Say what it sets
-   (developer Claude Sonnet, reviewer Claude Opus, both `high`) and that `/rig:dev-loop` reads it.
+   (developer Claude Sonnet, reviewer Claude Opus, both `high`), that it is the project's shared
+   default, and that anyone can override a role for themselves in a gitignored
+   `loop-models.local.json` with the same shape.
 5. **`.gitignore`**: add the lines of `templates/gitignore` that are missing.
 6. **`.claude/settings.json`**: from `templates/claude-settings.json`. It makes Claude Code offer
    the unslop plugins to anyone who opens the repository (another machine, a colleague, a cloud

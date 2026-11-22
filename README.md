@@ -116,7 +116,8 @@ flowchart TB
 the `auto-dev` command into `~/.local/bin`.
 
 In a Herdr pane, `/rig:dev-loop <ISSUE>` runs one issue: the orchestrator opens a developer and a
-reviewer agent (tool, model and effort from `loop-models.json`), drives TDD and up to three review
+reviewer agent (tool, model and effort from `loop-models.json`, or a personal gitignored
+`loop-models.local.json`), drives TDD and up to three review
 rounds, pushes the branch and opens the PR. `auto-dev "<project>"` repeats this for every
 unblocked issue of a Linear project, merging each into `auto/<project-slug>`, and opens one PR into
 `main` at the end. Merging into `main` always stays with you.
@@ -163,7 +164,8 @@ workspace and of the project's team (named in its `.linear.toml`).
 - **One `auto-dev` per Linear project at a time.** Two loops on the same project pick the same
   issue. Split the work by project, or use `/rig:dev-loop` on different issues.
 - Everyone merges PRs into `main` themselves; the rig never does.
-- `loop-models.json` is shared: a change to the agents applies to everyone after they pull.
+- `loop-models.json` is the project's shared default. Anyone can override a role for themselves
+  in `loop-models.local.json`, gitignored, with the same shape, to match their own subscriptions.
 
 ## Adding or editing a skill
 
