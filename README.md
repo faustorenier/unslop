@@ -8,6 +8,11 @@ Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a p
 | `core` | tdd, debug, review, git | user scope, always |
 | `planning` | grill-me, to-ticket, to-prd, to-adr, to-tickets, linear | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
+| `rig` | init, dev-loop, auto-dev, herdr | user scope, always |
+
+`planning` decides what to build, `core` holds the rules for how to build it, `rig` is the
+multi-agent setup that has a developer and a reviewer agent apply those rules. `rig` works only
+in projects prepared with `/rig:init`, and needs [Herdr](https://herdr.dev).
 
 ## Install (once per machine)
 
@@ -15,6 +20,7 @@ Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a p
 /plugin marketplace add faustorenier/unslop
 /plugin install core@unslop
 /plugin install planning@unslop
+/plugin install rig@unslop
 ```
 
 GitHub is the only source. After a push, refresh the catalog and the bundles, then restart
@@ -24,6 +30,7 @@ Claude Code:
 claude plugin marketplace update unslop
 claude plugin update core@unslop
 claude plugin update planning@unslop
+claude plugin update rig@unslop
 ```
 
 ## Enable `web` in one project
@@ -119,6 +126,35 @@ flowchart TB
     fails -- Yes --> stop["Stop · discuss"]
     ok -- Yes --> test["Failing test"]
     test --> tdd["core:tdd"]
+  end
+  classDef default rx:5,ry:5,stroke-width:1px
+  style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
+```
+
+### Multi-agent execution (`rig`)
+
+`/rig:init` prepares a project once: git and GitHub repo, a Linear team in `.linear.toml`,
+`## Workflow` and `## Verification` in CLAUDE.md, `AGENTS.md` and `loop-models.json`. It also links
+the `auto-dev` command into `~/.local/bin`.
+
+In a Herdr pane, `/rig:dev-loop <ISSUE>` runs one issue: the orchestrator opens a developer and a
+reviewer agent (tool, model and effort from `loop-models.json`), drives TDD and up to three review
+rounds, pushes the branch and opens the PR. `auto-dev "<project>"` repeats this for every
+unblocked issue of a Linear project, merging each into `auto/<project-slug>`, and opens one PR into
+`main` at the end. Merging into `main` always stays with you.
+
+```mermaid
+%%{init: {"look": "classic", "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace", "theme": "base", "themeVariables": {"background": "#1c1c1f", "primaryColor": "#232326", "primaryBorderColor": "#3a3a3f", "primaryTextColor": "#e6e6e6", "secondaryColor": "#232326", "tertiaryColor": "#1f1f23", "textColor": "#c8c8cc", "lineColor": "#6b6b70", "clusterBkg": "#1f1f23", "clusterBorder": "#34343a", "titleColor": "#9a9aa0", "edgeLabelBackground": "#18181b", "fontSize": "14px"}, "flowchart": {"curve": "basis", "rankSpacing": 35}}}%%
+flowchart TB
+  subgraph card[" "]
+    direction TB
+    init["rig:init"] --> issues["Linear issues"]
+    issues --> one{"One issue?"}
+    one -- Yes --> devloop["rig:dev-loop"]
+    one -- "Whole project" --> autodev["auto-dev"]
+    autodev -- "each issue" --> devloop
+    devloop --> agents["developer ⇄ reviewer · Herdr"]
+    agents --> pr["PR · you merge"]
   end
   classDef default rx:5,ry:5,stroke-width:1px
   style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
