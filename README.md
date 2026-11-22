@@ -5,10 +5,10 @@ Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a p
 
 | Bundle | Skills | Enable |
 |---|---|---|
+| `rig` | init, dev-loop, auto-dev, herdr | user scope, always |
 | `core` | tdd, debug, review, git | user scope, always |
 | `planning` | grill-me, to-ticket, to-prd, to-adr, to-tickets, linear | user scope, always |
 | `web` | design-taste-frontend, product-ui, a11y, seo-aeo-best-practices, vercel-react-best-practices | per project |
-| `rig` | init, dev-loop, auto-dev, herdr | user scope, always |
 
 `planning` decides what to build, `core` holds the rules for how to build it, `rig` is the
 multi-agent setup that has a developer and a reviewer agent apply those rules. `rig` works only
@@ -32,28 +32,6 @@ claude plugin update core@unslop
 claude plugin update planning@unslop
 claude plugin update rig@unslop
 ```
-
-## Enable `web` in one project
-
-1. From the project root: `claude plugin install web@unslop --scope project`
-   (`--scope local` to enable it only for yourself).
-2. Add the marketplace source to `<project>/.claude/settings.json`. The install command does not
-   write it, and without it nobody else can find `unslop`:
-
-   ```json
-   {
-     "extraKnownMarketplaces": {
-       "unslop": {
-         "source": { "source": "github", "repo": "faustorenier/unslop" }
-       }
-     },
-     "enabledPlugins": { "web@unslop": true }
-   }
-   ```
-
-3. Commit `.claude/settings.json`.
-
-Update after a push: `claude plugin update web@unslop --scope project`.
 
 ## Workflow
 
@@ -160,17 +138,6 @@ flowchart TB
   style card fill:#18181b,stroke:#2a2a2e,rx:8,ry:8
 ```
 
-### Which `web` skills
-
-| Work | Skills |
-|---|---|
-| Visual (layout, animation, 3D) | no TDD; describe what to check visually |
-| Landing, portfolio, marketing site | `design-taste-frontend` + `seo-aeo-best-practices` + `a11y` |
-| Dashboard, admin, forms, tables | `product-ui` + `a11y`; logic through `core:tdd` |
-
-In projects with `components.json`, add the official shadcn skill: `npx skills add shadcn/ui`
-(commit `.claude/skills/`).
-
 ## Collaboration
 
 This repository is public: anyone can install the plugins, and only the owner can change them.
@@ -206,3 +173,38 @@ workspace and of the project's team (named in its `.linear.toml`).
   description then costs no context.
 - Push, then update as in Install. Never add `version` to `plugin.json`: the commit SHA is the
   version, so every push is picked up.
+
+## `web`
+
+### Enable it in one project
+
+1. From the project root: `claude plugin install web@unslop --scope project`
+   (`--scope local` to enable it only for yourself).
+2. Add the marketplace source to `<project>/.claude/settings.json`. The install command does not
+   write it, and without it nobody else can find `unslop`:
+
+   ```json
+   {
+     "extraKnownMarketplaces": {
+       "unslop": {
+         "source": { "source": "github", "repo": "faustorenier/unslop" }
+       }
+     },
+     "enabledPlugins": { "web@unslop": true }
+   }
+   ```
+
+3. Commit `.claude/settings.json`.
+
+Update after a push: `claude plugin update web@unslop --scope project`.
+
+### Which skills
+
+| Work | Skills |
+|---|---|
+| Visual (layout, animation, 3D) | no TDD; describe what to check visually |
+| Landing, portfolio, marketing site | `design-taste-frontend` + `seo-aeo-best-practices` + `a11y` |
+| Dashboard, admin, forms, tables | `product-ui` + `a11y`; logic through `core:tdd` |
+
+In projects with `components.json`, add the official shadcn skill: `npx skills add shadcn/ui`
+(commit `.claude/skills/`).
