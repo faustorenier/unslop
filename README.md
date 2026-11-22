@@ -1,4 +1,4 @@
-# claude-skills
+# unslop
 
 Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a plugin
 (a bundle of skills). Skills are invoked as `<bundle>:<skill>`, e.g. `core:tdd`.
@@ -12,7 +12,7 @@ Personal Claude Code plugin marketplace (`unslop`). Each top-level folder is a p
 ## Install (once per machine)
 
 ```
-/plugin marketplace add faustorenier/claude-skills
+/plugin marketplace add faustorenier/unslop
 /plugin install core@unslop
 /plugin install planning@unslop
 ```
@@ -37,7 +37,7 @@ claude plugin update planning@unslop
    {
      "extraKnownMarketplaces": {
        "unslop": {
-         "source": { "source": "github", "repo": "faustorenier/claude-skills" }
+         "source": { "source": "github", "repo": "faustorenier/unslop" }
        }
      },
      "enabledPlugins": { "web@unslop": true }
