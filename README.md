@@ -51,7 +51,7 @@ claude plugin update rig@unslop
    }
    ```
 
-3. Commit `.claude/settings.json`. Collaborators need read access to this private repo (see Collaboration).
+3. Commit `.claude/settings.json`.
 
 Update after a push: `claude plugin update web@unslop --scope project`.
 
@@ -173,20 +173,11 @@ In projects with `components.json`, add the official shadcn skill: `npx skills a
 
 ## Collaboration
 
-This repository is private. Anyone who installs these plugins needs read access to it, because
-Claude Code clones the marketplace with their own git credentials.
+This repository is public: anyone can install the plugins, and only the owner can change them.
+Colleagues need no access to it. Suggestions come as issues or pull requests from forks, merged
+only by the owner.
 
-### Give access
-
-- **Repository on a personal account** (today): repo Settings → Collaborators → Add people, or
-  `gh api -X PUT repos/faustorenier/unslop/collaborators/<username>`. Personal repositories have no
-  read-only role: a collaborator can also push. Protect `main` (Settings → Branches, require a pull
-  request) so nobody writes to it directly.
-- **True read-only access** needs a GitHub organization: transfer the repository there and add
-  people with the **Read** role. The address changes to `<org>/unslop`: update this README and
-  `rig/skills/init/templates/claude-settings.json`.
-
-A colleague also needs: collaborator access to the project repository, membership of the Linear
+A colleague needs: collaborator access to the project repository, membership of the Linear
 workspace and of the project's team (named in its `.linear.toml`).
 
 ### Join a project already set up with `/rig:init`
@@ -195,7 +186,7 @@ workspace and of the project's team (named in its `.linear.toml`).
    `herdr` (`herdr integration install claude`), `jq`, Node, and `opencode` if `loop-models.json`
    uses it.
 2. Clone the project and open `claude` in it. `.claude/settings.json` makes Claude Code offer the
-   unslop plugins: accept. Without access to this repository the install fails.
+   unslop plugins: accept.
 3. Run `/rig:init`. It finds the repo, team and files already in place and leaves them alone; it
    only sets up this machine (the `auto-dev` link, the Herdr checks) and runs the preflight, which
    lists anything still missing.
