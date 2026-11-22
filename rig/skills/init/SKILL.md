@@ -31,9 +31,10 @@ Report in a short table what exists and what is missing:
 Only for what is missing:
 
 1. No git repository: `git init -b main`.
-2. Empty folder: offer the TypeScript + Vitest scaffold in `templates/scaffold-ts/` (replace
-   `{{PACKAGE_NAME}}` with the product name in kebab-case), then
-   `npm install -D typescript vitest @types/node`. Another stack → the user sets it up first; stop.
+2. No stack yet (nothing to build or test): the stack is the user's choice, never this skill's.
+   Ask which scaffolding command to use (`npx create-next-app@latest .`, `npm create vite@latest .`,
+   ...). Run it on a yes, or let the user run it, then diagnose again. Without a stack the rig has
+   no verification commands, so stop until one exists.
 3. No `origin`: offer `gh repo create <kebab-name> --private --source=. --remote=origin`. The
    first push waits for the commit in step 6.
 
