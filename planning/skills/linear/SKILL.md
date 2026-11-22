@@ -8,8 +8,15 @@ allowed-tools: Bash(linear *)
 Work on Linear through the `linear` CLI (schpet/linear-cli, already authenticated on the workspace `faustorenier`).
 This skill supersedes the Linear MCP server. Docs: https://github.com/schpet/linear-cli.
 
-The default team is `FAU`: pass `--team FAU` to commands that list, query or create. If the repository has a
-`.linear.toml` (written by `linear config`), its team is the project's team: omit `--team` and the CLI uses it.
+Each repository belongs to one team, named in its `.linear.toml` (written by `linear config`). With that file,
+omit `--team` and the CLI uses the repository's team; `linear team id --no-input` prints it. There is no default team.
+If `.linear.toml` is missing:
+
+- Interactive session: ask the user which team the repository belongs to (`linear team list --no-input`), or whether
+  to create one (see New team). Then run `linear config --team <KEY> --sort manual --no-input` and tell the user to
+  commit `.linear.toml`.
+- Headless run (`claude -p`, auto-dev): stop and say the repository has no `.linear.toml`. Never guess a team.
+
 Always pass `--no-input` so a missing value fails instead of waiting on a prompt, and `--yes` to commands that ask
 for confirmation. Use `--json` when you need to parse output. When unsure of a flag, run `linear <command> --help`.
 
@@ -19,13 +26,13 @@ for confirmation. Use `--json` when you need to parse output. When unsure of a f
 linear issue view <issue-ID> --no-input                 # description and comments
 linear issue view <issue-ID> --json --no-input          # includes project, state, relations
 linear issue relation list <issue-ID> --no-input
-linear project list --team FAU --no-input
+linear project list --no-input
 linear project view "<project>" --no-input            # the project overview holds the agreed design
-linear issue query --team FAU --project "<project>" --no-input
-linear issue query --team FAU --search "<text>" --no-input
+linear issue query --project "<project>" --no-input
+linear issue query --search "<text>" --no-input
 ```
 
-`issue list` shows only issues assigned to you; use `issue query --team FAU` to see the team's issues. Before starting
+`issue list` shows only issues assigned to you; use `issue query` to see the team's issues. Before starting
 an issue, read both the issue and its project.
 
 ## Status
@@ -49,12 +56,12 @@ Write long Markdown to a file in the scratchpad and pass it with `--description-
 `--content-file`, instead of quoting it on the command line.
 
 ```sh
-linear issue create --team FAU --project "<project>" --title "..." \
+linear issue create --project "<project>" --title "..." \
   --description-file <file> --label Feature --state Backlog --no-input --yes
 linear issue update <issue-ID> --description-file <file> --no-input
 linear issue comment add <issue-ID> --body-file <file> --no-input --yes
 linear issue relation add <issue-ID> blocked-by <issue-ID> --no-input
-linear project create --team FAU --name "<project>" --description "<≤255 chars>" \
+linear project create --name "<project>" --description "<≤255 chars>" \
   --content-file <file> --status backlog --no-input
 linear project update "<project>" --content-file <file> --no-input
 ```
@@ -75,6 +82,18 @@ Implementation details.
 
 To mention an issue or a person, paste its plain Linear URL (`linear issue url <issue-ID>`); `@name` and Markdown links
 do not create mentions. Run `linear markdown` for the full reference.
+
+## New team
+
+One team per product. Create a team only when the user asks:
+
+1. `linear team create --name "<Product>" --key <KEY> --no-input --yes`.
+2. `linear team states <KEY> --no-input` must list **In Review** (type started). If it is missing, ask the user to
+   add it in Linear (team settings, Workflow): the statuses above rely on it.
+3. From the repository root: `linear config --team <KEY> --sort manual --no-input`, then commit `.linear.toml`.
+4. `linear team autolinks`, so issue IDs in commits and PRs link to Linear.
+
+The labels Feature, Bug and Improvement belong to the workspace, so a new team already has them.
 
 ## Anything else
 
