@@ -1,71 +1,96 @@
 #!/usr/bin/env bash
-# One fresh Claude session per Linear issue (skill auto-dev); stops on DONE, FAILED or max-issues.
+# Runs rig:auto-dev in a new headless Claude session per issue until DONE, FAILED or the limit.
 set -uo pipefail
 
-project="${1:?usage: auto-dev <Linear project> [max-issues] [base-branch]}"
-max="${2:-0}"
-slug=$(printf '%s' "$project" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')
-base="${3:-auto/$slug}"
+usage='usage: auto-dev <Linear project> [max-issues] [base-branch]'
 
-cd "$(git rev-parse --show-toplevel)" || exit 2
-[[ "${HERDR_ENV:-}" == 1 ]] || { echo "auto-dev: run this inside Herdr (HERDR_ENV=1)" >&2; exit 2; }
-"$(dirname "$(realpath "${BASH_SOURCE[0]}")")/preflight.sh" || exit 2
+slugify() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g'
+}
 
-logs=".auto-dev"
-mkdir -p "$logs"
-count=0
-workspace="$HERDR_WORKSPACE_ID"
+# Herdr hands out a closed id only once, so anything missing from the snapshot was opened by this run.
+list_tabs() { herdr tab list --workspace "$workspace" | jq -r '.result.tabs[].tab_id' | sort; }
+list_panes() { herdr pane list --workspace "$workspace" | jq -r '.result.panes[].pane_id' | sort; }
 
-# Herdr never reuses a closed id, so a set difference isolates exactly what this run opened.
-tab_ids() { herdr tab list --workspace "$workspace" | jq -r '.result.tabs[].tab_id' | sort; }
-pane_ids() { herdr pane list --workspace "$workspace" | jq -r '.result.panes[].pane_id' | sort; }
+snapshot() {
+  tabs_at_start=$(list_tabs)
+  panes_at_start=$(list_panes)
+}
 
-close_new_herdr() {
-  local tab pane
-  for tab in $(comm -13 <(printf '%s\n' "$tabs_before") <(tab_ids)); do
-    herdr tab close "$tab" >/dev/null && echo "auto-dev: closed tab $tab"
+close_opened() {
+  local id
+  for id in $(comm -13 <(printf '%s\n' "$tabs_at_start") <(list_tabs)); do
+    herdr tab close "$id" >/dev/null && echo "auto-dev: tab $id closed"
   done
-  for pane in $(comm -13 <(printf '%s\n' "$panes_before") <(pane_ids)); do
-    herdr pane close "$pane" >/dev/null && echo "auto-dev: closed pane $pane"
+  for id in $(comm -13 <(printf '%s\n' "$panes_at_start") <(list_panes)); do
+    herdr pane close "$id" >/dev/null && echo "auto-dev: pane $id closed"
   done
 }
 
-while true; do
-  log="$logs/$(date +%Y%m%d-%H%M%S).log"
-  echo "auto-dev: run $((count + 1)), log in $log"
-  tabs_before=$(tab_ids)
-  panes_before=$(pane_ids)
+# A failed run keeps its tabs so the agents can be read afterwards; the loop ends either way.
+leave_open() {
+  echo "auto-dev: keeping this run's Herdr tabs open so you can inspect them" >&2
+}
 
+run_once() {
+  log="$log_dir/$(date +%Y%m%d-%H%M%S).log"
+  echo "auto-dev: starting run $((merged + 1)), logging to $log"
+  snapshot
   claude -p "/rig:auto-dev $project --base $base" --permission-mode auto 2>&1 | tee "$log"
   verdict=$(grep -E '^AUTO_DEV: ' "$log" | tail -n 1)
+}
 
-  # Tabs of a failed run stay open, so the user can read the agents; the loop stops anyway.
-  case "$verdict" in
-    "AUTO_DEV: NEXT"* | "AUTO_DEV: DONE"*) close_new_herdr ;;
-    *) echo "auto-dev: left this run's Herdr tabs open for inspection" >&2 ;;
-  esac
-
+handle_verdict() {
   case "$verdict" in
     "AUTO_DEV: DONE"*)
-      echo "auto-dev: nothing left in $project after $count issue(s)"
-      [[ "$base" != main ]] && echo "auto-dev: review and merge the PR: gh pr view $base --web"
+      close_opened
+      echo "auto-dev: $project has no issues left; this loop merged $merged"
+      [[ "$base" != main ]] && echo "auto-dev: the PR waits for your review and merge: gh pr view $base --web"
       exit 0
       ;;
     "AUTO_DEV: NEXT"*)
-      count=$((count + 1))
-      echo "auto-dev: ${verdict#AUTO_DEV: NEXT } merged into $base ($count so far)"
-      if (( max > 0 && count >= max )); then
-        echo "auto-dev: reached the limit of $max issue(s)"
+      close_opened
+      merged=$((merged + 1))
+      echo "auto-dev: ${verdict#AUTO_DEV: NEXT } landed on $base (total so far: $merged)"
+      if (( limit > 0 && merged >= limit )); then
+        echo "auto-dev: stopping at the limit of $limit issue(s)"
         exit 0
       fi
       ;;
     "AUTO_DEV: FAILED"*)
+      leave_open
       echo "auto-dev: stopped: ${verdict#AUTO_DEV: FAILED }" >&2
       exit 1
       ;;
     *)
-      echo "auto-dev: the session ended without a verdict, see $log" >&2
+      leave_open
+      echo "auto-dev: no verdict at the end of the session, read $log" >&2
       exit 1
       ;;
   esac
-done
+}
+
+main() {
+  project="${1:?$usage}"
+  limit="${2:-0}"
+  base="${3:-auto/$(slugify "$project")}"
+
+  cd "$(git rev-parse --show-toplevel)" || exit 2
+  if [[ "${HERDR_ENV:-}" != 1 ]]; then
+    echo "auto-dev: start this from a Herdr pane (HERDR_ENV=1)" >&2
+    exit 2
+  fi
+  "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/preflight.sh" || exit 2
+
+  log_dir=".auto-dev"
+  mkdir -p "$log_dir"
+  merged=0
+  workspace="$HERDR_WORKSPACE_ID"
+
+  while true; do
+    run_once
+    handle_verdict
+  done
+}
+
+main "$@"

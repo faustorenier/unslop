@@ -1,112 +1,133 @@
 ---
 name: auto-dev
-description: Develop the next unblocked issue of a Linear project end to end, with no human approval, then merge it into the project's integration branch and push it. One issue per run; the auto-dev script calls it in a loop. Use only when the user or that script asks for auto-dev.
+description: Take the next unblocked issue of a Linear project from start to finish with no human approval, then merge it into the project's integration branch and push it. One issue per run; the auto-dev script calls it in a loop. Use only when the user or that script asks for auto-dev.
 argument-hint: <Linear project, e.g. "Todo CLI"> [--base <branch>]
 disable-model-invocation: true
 ---
 
-Run **one** iteration of the automatic development loop on the Linear project in $ARGUMENTS, then
-stop. You run headless (`claude -p`): nobody answers questions, so never ask, decide. Load the
-`planning:linear` skill first; every Linear command follows it (team, `--no-input`, states).
+This skill runs **a single** iteration of the automatic development loop for the Linear project
+in $ARGUMENTS, then stops. The session is headless (`claude -p`) and nobody is there to answer:
+never ask, decide. Load the `planning:linear` skill before anything else; it governs every Linear
+command (team, `--no-input`, states).
 
-`--base <branch>` is the **base branch**: every issue branches from it and merges back into it.
-Default `auto/<project-slug>`. It is `main` only when passed explicitly.
+## Contract
 
-Your **last line of output** must be exactly one of these, because the `auto-dev` script reads it:
+**Integration branch** (`<base>` in the commands below): set with `--base <branch>`. Every issue
+branches from it and merges back into it. Without the flag it is `auto/<project-slug>`; it is
+`main` only when passed explicitly.
 
-- `AUTO_DEV: NEXT <ISSUE>`: the issue is merged into the base branch and pushed.
-- `AUTO_DEV: DONE`: nothing left to develop in the project.
-- `AUTO_DEV: FAILED <ISSUE or -> <one-line reason>`: you stopped. Nothing broken reached the base branch.
+**Authorization**: invoking this skill is the user's standing authorization to commit, merge and
+push to the integration branch. It never covers `main`, unless `main` is the integration branch.
 
-Running this skill is the user's standing authorization to commit, merge and push to the base
-branch. It never authorizes touching `main` unless `main` is the base branch.
+**Verdict**: the `auto-dev` script reads your **final line of output**, so that line must be
+exactly one of:
 
-## 1. Preflight
+| Line | Meaning |
+|---|---|
+| `AUTO_DEV: NEXT <ISSUE>` | the issue is merged into the integration branch and pushed |
+| `AUTO_DEV: DONE` | the project has nothing left to develop |
+| `AUTO_DEV: FAILED <ISSUE or -> <one-line reason>` | you stopped; nothing broken reached the integration branch |
 
-- The working tree must be clean. Run `git fetch`. If the base branch does not exist locally or on
-  `origin`, create it from `origin/main` and push it with `-u`. Check it out and run
-  `git pull --ff-only`. If any of these fails, stop with `FAILED - <reason>`.
-- `HERDR_ENV` must be `1`, since `dev-loop` needs Herdr. If it isn't, stop with
-  `FAILED - not inside Herdr`.
-- Make sure the team label `auto-merged` exists (`linear label list`). If it doesn't, create it.
+## Starting state
 
-## 2. Pick the issue
+1. The working tree must be clean.
+2. Run `git fetch`. If the integration branch does not exist locally or on `origin`, create it
+   from `origin/main` and push it with `-u`.
+3. Check it out and run `git pull --ff-only`.
 
-List every issue of the project in every state (`linear issue query --project "<P>" --json`, see
-`planning:linear` for the team flag).
+If any of the three fails, stop with `FAILED - <reason>`.
 
-- **Resolved** means Done, or labelled `auto-merged`. Canceled and Duplicate issues are ignored.
-- **Candidates** are the issues that are not resolved and not ignored.
-- An issue **In Progress** without `auto-merged` is a run that broke halfway. Stop with
-  `FAILED <ISSUE> left In Progress by an earlier run` and let the user look at it.
-- A candidate is **ready** when every issue that blocks it (`linear issue relation list <ISSUE>`,
-  the `blocked-by` relations) is resolved.
-- No candidates left: if the base branch is not `main`, make sure a PR from it into `main`
-  exists (`gh pr list --head <base>`); if not, open it per `core:git`: title
-  `feat: <project>`, body with one line per issue merged into the base branch and a
-  `Closes <ISSUE>` line for each. Then print `AUTO_DEV: DONE`. Never merge that PR.
-- Candidates left but none ready: stop with `FAILED - no unblocked issue left`.
-- Otherwise take the ready candidate with the lowest number.
+4. `HERDR_ENV` must be `1`, because `dev-loop` depends on Herdr. Otherwise stop with
+   `FAILED - not inside Herdr`.
+5. The team label `auto-merged` must exist (`linear label list`); create it if it is missing.
 
-## 3. Develop
+## Choosing the issue
 
-Run the `dev-loop` skill on the issue with the base branch: read `../dev-loop/SKILL.md` (relative
-to this skill's base directory) and follow it exactly. It cannot be invoked as a skill, because
-it is user-only. It handles the brief, the branch, the In Progress status and
-the developer and reviewer agents. Wherever it says to report to the user, collect that report
-for step 6 instead of stopping.
+Fetch every issue of the project in every state: `linear issue query --project "<P>" --json`
+(the team flag is in `planning:linear`). Then sort them with these terms:
 
-A review finding still open after the review rounds is **blocking** when it is a bug, a broken
-acceptance criterion, a security issue or a broken rule from CLAUDE.md or an ADR the issue lists.
-Style and taste findings are not blocking. If any blocking finding is left, go to step 7 with
-that reason.
+- **Settled**: Done, or carrying the `auto-merged` label.
+- **Ignored**: Canceled or Duplicate.
+- **Pending**: neither settled nor ignored.
+- **Unblocked**: a pending issue whose blockers (the `blocked-by` relations listed by
+  `linear issue relation list <ISSUE>`) are all settled.
 
-## 4. Verify, in place of the human test
+Decide in this order; the first rule that applies wins:
 
-Every check must pass. If one fails, give the developer up to 2 extra rounds to fix it (through
-`dev-loop`'s developer pane). If it still fails, go to step 7.
+1. An issue is **In Progress** without `auto-merged`: an earlier run broke halfway through it.
+   Stop with `FAILED <ISSUE> left In Progress by an earlier run` so the user can look at it.
+2. Nothing is pending: if the integration branch is not `main`, make sure a PR from it into
+   `main` exists (`gh pr list --head <base>`). If there is none, open it per `core:git`, titled
+   `feat: <project>`, with a body of one line per issue merged into the integration branch and a
+   `Closes <ISSUE>` line for each. Then print `AUTO_DEV: DONE`. You never merge that PR.
+3. Pending issues exist but none is unblocked: stop with `FAILED - no unblocked issue left`.
+4. Otherwise take the unblocked issue with the lowest number.
 
-1. Every command under `## Verification` in CLAUDE.md, on the issue branch.
-2. Each acceptance criterion maps to a test that exists and passes. Write down how each criterion
-   was verified. A "Then the user sees…" criterion cannot be verified headless: note it for step 6
-   as a visual check, it does not block.
+## Building it
+
+Run `dev-loop` on the issue against the integration branch: read `../dev-loop/SKILL.md` (relative
+to this skill's base directory) and follow it to the letter. It cannot be invoked as a skill,
+because it is user-only. It takes care of the brief, the branch, the In Progress status and the
+developer and reviewer agents. Wherever it tells you to report to the user, do not stop: keep
+that report for **Wrapping up the issue**.
+
+A review finding still open once the review rounds are over is **blocking** when it is:
+
+- a bug
+- a broken acceptance criterion
+- a security issue
+- a broken rule from CLAUDE.md or from an ADR the issue lists
+
+Style and taste findings never block. If a blocking finding is left, go to **When it breaks**
+with that reason.
+
+## Checks in place of a human
+
+All of them must pass. When one fails, the developer gets up to 2 extra rounds to fix it
+(through `dev-loop`'s developer pane). Still failing → **When it breaks**.
+
+1. On the issue branch, every command under `## Verification` in CLAUDE.md.
+2. Every acceptance criterion maps to a test that exists and passes; write down how each one was
+   verified. A "Then the user sees…" criterion cannot be verified headless: it does not block,
+   note it as a visual check for **Wrapping up the issue**.
 3. If CLAUDE.md describes a real-app check (dev server, browser through `chrome-devtools-cli`),
    run it as described, then stop every server you started and close the browser tabs.
 
-## 5. Merge and push
+## Landing on the integration branch
 
-Changes come only from this issue's branch.
+The only source of changes is this issue's branch.
 
-1. On the branch, commit any remaining work per `core:git`. Use one commit, or a few if they read
+1. Commit any remaining work on the branch per `core:git`: one commit, or a few if they read
    better.
 2. `git checkout <base>`, `git pull --ff-only`, then
    `git merge --no-ff <branch> -m "Merge branch '<branch>' (<ISSUE>)"`.
-3. A merge conflict: run `git merge --abort` and go to step 7.
-4. Run the `## Verification` commands again on the base branch. If they fail, run
-   `git reset --hard ORIG_HEAD` (only the merge is undone; the branch keeps the work) and go to
-   step 7.
-5. `git push origin <base>`, then delete the issue branch locally. **Never deploy. Never push to
-   `main` unless it is the base branch.**
+3. On a merge conflict, run `git merge --abort` and go to **When it breaks**.
+4. Run the `## Verification` commands again, this time on the integration branch. If they fail,
+   run `git reset --hard ORIG_HEAD` (it undoes only the merge; the branch keeps the work) and go
+   to **When it breaks**.
+5. `git push origin <base>`, then delete the issue branch locally. **No deploys, ever. No push to
+   `main` unless `main` is the integration branch.**
 
-## 6. Close the issue
+## Wrapping up the issue
 
-- Set the status to **In Review** and add the label `auto-merged` with
-  `linear issue update <ISSUE> --add-label auto-merged` (`--label` replaces the other labels). **Never move it to Done**: the
-  user does the testing and merges the base branch into `main`.
-- Comment on the issue: the merge commit hash, the base branch, what was built, how each
-  acceptance criterion was verified, the visual checks left for the user, and any review findings
-  left open as non-blocking.
-- Make sure no process you started is still running. Leave the Herdr tabs open:
-  the `auto-dev` script closes every tab and pane the run opened once it reads your verdict.
+- Move it to **In Review** and add the `auto-merged` label with
+  `linear issue update <ISSUE> --add-label auto-merged` (`--label` would replace the other
+  labels). **Never set it to Done**: the user does the testing and merges the integration branch
+  into `main`.
+- Comment on the issue with the merge commit hash, the integration branch, what was built, how
+  each acceptance criterion was verified, the visual checks left for the user, and any review
+  findings left open as non-blocking.
+- Check that no process you started is still running. Do not close the Herdr tabs: once the
+  `auto-dev` script reads your verdict, it closes every tab and pane the run opened.
 - Print `AUTO_DEV: NEXT <ISSUE>`.
 
-## 7. On failure
+## When it breaks
 
-- Leave the issue branch as it is: don't merge it, don't push it, don't delete it. Make sure the
-  base branch holds only what was there before, and that you are back on it with a clean working
-  tree. Commit any unfinished work on the issue branch first, as `wip(<scope>): <message>`.
-- Leave the issue **In Progress** and comment on it: what failed, the output that shows it, the
+- First commit any unfinished work on the issue branch, as `wip(<scope>): <message>`. Then leave
+  that branch alone: no merge, no push, no delete. The integration branch must hold only what it
+  held before, and you must be back on it with a clean working tree.
+- Keep the issue **In Progress** and comment on it: what failed, the output that shows it, the
   branch name and the open findings.
-- Stop any process you started. Leave the Herdr tabs open: the script keeps them after a failure,
-  so the user can read the agents.
+- Stop any process you started. Do not close the Herdr tabs: after a failure the script keeps
+  them, so the user can read the agents.
 - Print `AUTO_DEV: FAILED <ISSUE> <reason>`.
